@@ -6,9 +6,10 @@ export class CreatIncomeExpanses {
     constructor() {
         this.cancelBtn();
         this.saveBtn();
-        this.syncSelects();
+        // this.syncSelects();
         this.allCategoriesIncome();
         this.allCategoriesExpenses();
+        // this.incomeElements = '';
     }
 
     cancelBtn() {
@@ -28,6 +29,10 @@ export class CreatIncomeExpanses {
         const selectType = document.querySelector('#box1');
         let selectIndex = selectType.selectedIndex;
         let selectOption = selectType.options
+        // let incomeArr = this.incomeElements;
+        // incomeArr.forEach(function (item) {
+        //     let opt = document.querySelector()
+        // })
         const selectData = selectOption[selectIndex].textContent;
         const selectCategoryId = document.querySelector('#box2').value;
         const inputSum = document.querySelector('#incomeExpenseSum').value;
@@ -39,7 +44,7 @@ export class CreatIncomeExpanses {
                 "amount": inputSum,
                 "date": inputDateValue,
                 "comment": textAreaData,
-                "category_id": this.allCategoriesIncome()
+                "category_id": selectCategoryId
             });
             if (result) {
                 if (result.error) {
@@ -55,22 +60,63 @@ export class CreatIncomeExpanses {
 
     }
 
-    syncSelects() {
-        const box1 = document.querySelector('#box1');
-        box1.onchange = () => {
-            const box2 = document.querySelector('#box2');
-           box2.value = box1.value
-        }
+    // syncSelects() {
+    //     const box1 = document.querySelector('#box1');
+    //     box1.onchange = () => {
+    //         const box2 = document.querySelector('#box2');
+    //         if (box2.value === 'income') {
+    //             this.renderIncome()
+    //         }
+    //        // box2.value = box1.value
+    //     }
+    // }
+
+    //Рендерим Селект
+
+    renderIncome(resultIncome) {
+       const incomeBlock = document.querySelector('#box2');
+        resultIncome.forEach(item => {
+            const newBlock = `                             
+                                 <option value="income" id="${item.id}">${item.title}</option>                               
+                             `    ;
+            incomeBlock.innerHTML += newBlock;
+        })
+    }
+
+    renderExpense(resultExpense) {
+        const expenseBlock = document.querySelector('#box2');
+        resultExpense.forEach(item => {
+            const newBlock = `                             
+                                 <option value="expense" id="${item.id}">${item.title}</option>                               
+                             `;
+            expenseBlock.innerHTML += newBlock;
+        })
     }
 
     async allCategoriesIncome() {
         const resultIncome = await CustomHttp.request(config.host + '/categories/income')
-            resultIncome.forEach(item => {
-              return item.id
-            })
+        console.log(resultIncome)
+        const box1 = document.querySelector('#box1');
+        box1.onchange = () => {
+            const box2 = document.querySelector('#box2');
+            if (box1.value === 'income') {
+                this.renderIncome(resultIncome)
+            }
+            // box2.value = box1.value
+        }
     }
+
     async allCategoriesExpenses() {
         const resultExpense = await CustomHttp.request(config.host + '/categories/expense')
         console.log(resultExpense)
+        const box1 = document.querySelector('#box1');
+        box1.onchange = () => {
+            const box2 = document.querySelector('#box2');
+            if (box1.value === 'expense') {
+                this.renderExpense(resultExpense)
+            }
+            // box2.value = box1.value
+        }
+
     }
 }
