@@ -7,7 +7,7 @@ export class CreatIncomeExpanses {
         this.cancelBtn();
         this.saveBtn();
         this.allCategoriesIncome();
-        this.allCategoriesExpenses();
+        // this.allCategoriesExpenses();
     }
 
     cancelBtn() {
@@ -24,21 +24,24 @@ export class CreatIncomeExpanses {
     }
 
     async creatNewIncomeExpanse() {
-        const selectType = document.querySelector('#box1');
-        let selectIndex = selectType.selectedIndex;
-        let selectOption = selectType.options
-        const selectData = selectOption[selectIndex].textContent;
+        // const selectType = document.querySelector('#box1');
+        // let selectIndex = selectType.selectedIndex;
+        // let selectOption = selectType.options
+        // const selectData = selectOption[selectIndex].textContent;
+        const optionId = document.querySelector('option')
+        const boxIncome = document.querySelector('#box1').value;
         const selectCategoryId = document.querySelector('#box2').value;
         const inputSum = document.querySelector('#incomeExpenseSum').value;
         const inputDateValue = document.querySelector('#incomeExpenseDate').value;
         const textAreaData = document.querySelector('#incomeExpenseTextarea').value
+        console.log(selectCategoryId)
         try {
             const result = await CustomHttp.request(config.host + '/operations', 'POST', {
-                "type": selectData,
+                "type": boxIncome,
                 "amount": inputSum,
                 "date": inputDateValue,
                 "comment": textAreaData,
-                "category_id": selectCategoryId
+                "category_id": +selectCategoryId
             });
             if (result) {
                 if (result.error) {
@@ -72,7 +75,7 @@ export class CreatIncomeExpanses {
        const incomeBlock = document.querySelector('#box2');
         resultIncome.forEach(item => {
             const newBlock = `                             
-                                 <option value="income" id="${item.id}">${item.title}</option>                               
+                                 <option value="${item.id}" id="${item.id}">${item.title}</option>                               
                              `    ;
             incomeBlock.innerHTML += newBlock;
         })
@@ -93,7 +96,6 @@ export class CreatIncomeExpanses {
         console.log(resultIncome)
         const box1 = document.querySelector('#box1');
         box1.onchange = () => {
-            const box2 = document.querySelector('#box2');
             if (box1.value === 'income') {
                 this.renderIncome(resultIncome)
             }
@@ -105,7 +107,6 @@ export class CreatIncomeExpanses {
         console.log(resultExpense)
         const box1 = document.querySelector('#box1');
         box1.onchange = () => {
-            const box2 = document.querySelector('#box2');
             if (box1.value === 'expense') {
                 this.renderExpense(resultExpense)
             }

@@ -14,7 +14,7 @@ export class IncomeAndExpanses {
     }
 
     async incomeExpenseGet() {
-        const result = await CustomHttp.request(config.host + '/operations');
+        const result = await CustomHttp.request(config.host + '/operations?period=all');
         console.log(result)
     }
 }
