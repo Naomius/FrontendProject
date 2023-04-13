@@ -6,10 +6,8 @@ export class CreatIncomeExpanses {
     constructor() {
         this.cancelBtn();
         this.saveBtn();
-        // this.syncSelects();
         this.allCategoriesIncome();
         this.allCategoriesExpenses();
-        // this.incomeElements = '';
     }
 
     cancelBtn() {
@@ -29,10 +27,6 @@ export class CreatIncomeExpanses {
         const selectType = document.querySelector('#box1');
         let selectIndex = selectType.selectedIndex;
         let selectOption = selectType.options
-        // let incomeArr = this.incomeElements;
-        // incomeArr.forEach(function (item) {
-        //     let opt = document.querySelector()
-        // })
         const selectData = selectOption[selectIndex].textContent;
         const selectCategoryId = document.querySelector('#box2').value;
         const inputSum = document.querySelector('#incomeExpenseSum').value;
@@ -71,6 +65,7 @@ export class CreatIncomeExpanses {
     //     }
     // }
 
+
     //Рендерим Селект
 
     renderIncome(resultIncome) {
@@ -102,7 +97,6 @@ export class CreatIncomeExpanses {
             if (box1.value === 'income') {
                 this.renderIncome(resultIncome)
             }
-            // box2.value = box1.value
         }
     }
 
@@ -115,7 +109,6 @@ export class CreatIncomeExpanses {
             if (box1.value === 'expense') {
                 this.renderExpense(resultExpense)
             }
-            // box2.value = box1.value
         }
 
     }
