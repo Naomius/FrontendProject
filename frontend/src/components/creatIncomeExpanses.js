@@ -80,7 +80,7 @@ export class CreatIncomeExpanses {
             incomeBlock.innerHTML += newBlock;
         })
     }
-    
+
     async allCategoriesIncome() {
         const resultIncome = await CustomHttp.request(config.host + '/categories/income')
         console.log(resultIncome)
