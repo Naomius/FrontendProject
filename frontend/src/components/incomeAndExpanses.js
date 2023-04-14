@@ -5,11 +5,18 @@ export class IncomeAndExpanses {
     constructor() {
         this.createIncomeBtn();
         this.incomeExpenseGet();
+        this.createExpenseBtn();
     }
 
     createIncomeBtn() {
         document.querySelector('.createIncomeBtn').onclick = () => {
             location.href = '#/creatIncomeExpanses'
+        }
+    }
+
+    createExpenseBtn() {
+        document.querySelector('.createExpenseBtn').onclick = () => {
+            location.href = '#/creatExpensesIncome'
         }
     }
 

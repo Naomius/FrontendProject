@@ -10,6 +10,7 @@ import {NewCategoryExpanses} from "./components/newCategoryExpanses";
 import {EditCategoryExpanses} from "./components/editCategoryExpanses";
 import {IncomeAndExpanses} from "./components/incomeAndExpanses";
 import {CreatIncomeExpanses} from "./components/creatIncomeExpanses";
+import {CreatExpensesIncome} from "./components/creatExpensesIncome";
 
 export class Router {
     constructor() {
@@ -118,6 +119,16 @@ export class Router {
                 scripts: 'src/components/creatIncomeExpanses.js',
                 load: () => {
                     new CreatIncomeExpanses();
+                }
+            },
+            {
+                route: '#/creatExpensesIncome',
+                title: 'Создание Расходов и Доходов',
+                template: 'templates/creatExpensesIncome.html',
+                styles: 'styles/creatExpensesIncome.css',
+                scripts: 'src/components/creatExpensesIncome.js',
+                load: () => {
+                    new CreatExpensesIncome();
                 }
             },
         ]
