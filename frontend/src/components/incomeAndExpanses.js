@@ -54,9 +54,6 @@ export class IncomeAndExpanses {
                               </tr>
                               `;
             trElement.innerHTML += newBlock
-            if (item.type === 'expense') {
-               categoryColor.style.color = 'red';
-            }
         })
     }
 }
