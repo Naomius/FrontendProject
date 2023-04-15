@@ -34,9 +34,6 @@ export class Issue {
                     }
                 })
             })
-
-
-
     }
 
     newCategoryIssues() {
