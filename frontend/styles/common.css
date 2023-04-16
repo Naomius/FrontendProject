@@ -301,3 +301,28 @@ hr {
 .cardCreate {
     order: 1;
 }
+
+.validationText {
+    display: none;
+    color: red;
+    font-size: 18px;
+    margin-bottom: 18px;
+}
+.passwordValidText {
+    display: none;
+    color: red;
+    font-size: 18px;
+    margin-bottom: 18px;
+}
+.fullnameValidText {
+    display: none;
+    color: red;
+    font-size: 18px;
+    margin-bottom: 18px;
+}
+.repeatPasswordValidText {
+    display: none;
+    color: red;
+    font-size: 18px;
+    margin-bottom: 18px;
+}

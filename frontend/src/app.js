@@ -10,8 +10,8 @@ class App {
     }
 
 
-    handleRouteChanging() {
-        this.router.openRoute();
+   async handleRouteChanging() {
+       await this.router.openRoute();
     }
 }
 

@@ -72,11 +72,37 @@ export class Register {
         if (!element.value || !element.value.match(field.regex)) {
             element.style.borderColor = 'red';
             field.valid = false;
+            this.textValidation(field);
         } else {
             element.removeAttribute('style');
             field.valid = true;
+            this.textValidationRemove(field);
+
         }
         this.validateForm()
+    }
+
+    textValidation(field) {
+       const textBlockEmail = document.querySelector('.validationText');
+       const textBlockPassword = document.querySelector('.passwordValidText');
+       const fullNameTextBlockPassword = document.querySelector('.fullnameValidText');
+       const repeatPassTextBlockPassword = document.querySelector('.repeatPasswordValidText');
+
+       if (field.name === 'email') {textBlockEmail.style.display = 'block'}
+       if (field.name === 'password') {textBlockPassword.style.display = 'block'}
+       if (field.name === 'fullName') {fullNameTextBlockPassword.style.display = 'block'}
+       if (field.name === 'passwordRepeat') {repeatPassTextBlockPassword.style.display = 'block'}
+    }
+    textValidationRemove(field) {
+       const textBlockEmail = document.querySelector('.validationText');
+       const textBlockPassword = document.querySelector('.passwordValidText');
+       const fullNameTextBlockPassword = document.querySelector('.fullnameValidText');
+       const repeatPassTextBlockPassword = document.querySelector('.repeatPasswordValidText');
+
+        if (field.name === 'email') {textBlockEmail.style.display = 'none'}
+        if (field.name === 'password') {textBlockPassword.style.display = 'none'}
+        if (field.name === 'fullName') {fullNameTextBlockPassword.style.display = 'none'}
+        if (field.name === 'passwordRepeat') {repeatPassTextBlockPassword.style.display = 'none'}
     }
 
     validateForm() {

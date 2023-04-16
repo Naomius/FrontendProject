@@ -8,6 +8,8 @@ export class IncomeAndExpanses {
         this.incomeExpenseGet();
         this.createExpenseBtn();
         this.deleteModal();
+        this.dateFunc()
+        this.todayFilter()
     }
 
     createIncomeBtn() {
@@ -26,6 +28,7 @@ export class IncomeAndExpanses {
         const result = await CustomHttp.request(config.host + '/operations?period=all');
         console.log(result)
         this.renderIncomeExpense(result)
+        this.editIncomePage();
 
     }
 
@@ -86,8 +89,35 @@ export class IncomeAndExpanses {
         agreeBtn.onclick = () => {
             btn.style.display = "none";
         }
+    }
 
+    editIncomePage() {
+        const editBtn = document.querySelectorAll('.buttonEdit');
+        let issueId = '';
 
+        editBtn.forEach(item => {
+            item.addEventListener('click', event => {
+                issueId = (event.target.parentNode.parentNode.parentNode.parentNode.id)
+                if (issueId) {
+                    location.href = '#/editIncomeExpanses?id=' + issueId
+                }
+            })
+        })
+    }
+
+    dateFunc() {
+        const today = new Date()
+        const now = today.toLocaleDateString('ru-EU');
+          return now
+    }
+
+   async todayFilter() {
+        const today = new Date();
+        const now = today.toLocaleDateString('en-ca');
+
+        const todayResult = await CustomHttp.request(config.host + '/operations?period=interval&dateFrom='`${now}&dateTo=${now}`)
+       console.log(todayResult)
+        document.querySelector('#todayFilter').addEventListener('click', )
     }
 
 }

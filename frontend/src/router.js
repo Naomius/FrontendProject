@@ -11,6 +11,7 @@ import {EditCategoryExpanses} from "./components/editCategoryExpanses";
 import {IncomeAndExpanses} from "./components/incomeAndExpanses";
 import {CreatIncomeExpanses} from "./components/creatIncomeExpanses";
 import {CreatExpensesIncome} from "./components/creatExpensesIncome";
+import {EditIncomeExpanses} from "./components/editIncomeExpanses";
 
 export class Router {
     constructor() {
@@ -129,6 +130,16 @@ export class Router {
                 scripts: 'src/components/creatExpensesIncome.js',
                 load: () => {
                     new CreatExpensesIncome();
+                }
+            },
+            {
+                route: '#/editIncomeExpanses',
+                title: 'Редактирование Расходов и Доходов',
+                template: 'templates/editIncomeExpanses.html',
+                styles: 'styles/editIncomeExpanses.css',
+                scripts: 'src/components/editIncomeExpanses.js',
+                load: () => {
+                    new EditIncomeExpanses();
                 }
             },
         ]
