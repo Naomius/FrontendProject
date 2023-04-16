@@ -6,9 +6,23 @@ import * as events from "events";
 
 export class ExpensesPage {
     constructor() {
+        this.profileElement  =  document.getElementById('profileIssue');
+        this.profileFullNameElement  =  document.getElementById('profileFullName');
         this.newCategoryExpanses();
         this.incomeExpanses();
         this.deleteModal();
+        this.toggleUser();
+    }
+
+    toggleUser() {
+        const userInfo = Auth.getUserInfo();
+        const accessToken = localStorage.getItem(Auth.accessTokenKey);
+        if (userInfo && accessToken) {
+            this.profileElement.style.display = 'block';
+            this.profileFullNameElement.innerText = userInfo.fullName;
+        } else {
+            this.profileElement.style.display = 'none';
+        }
     }
 
     newCategoryExpanses() {

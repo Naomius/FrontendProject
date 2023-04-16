@@ -1,8 +1,8 @@
-.editCategoryExpansesLayout {
+.editCategoryLayout {
     padding: 100px 60px 0 60px;
 }
 
-.editCategoryExpansesLayout .container {
+.editCategoryLayout .container {
     max-width: 1220px;
     margin: 0 auto;
 }

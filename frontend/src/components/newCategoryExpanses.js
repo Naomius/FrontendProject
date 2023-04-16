@@ -4,6 +4,8 @@ import config from "../../config/config.js";
 
 export class NewCategoryExpanses {
     constructor() {
+        this.profileElement  =  document.getElementById('profileIssue');
+        this.profileFullNameElement  =  document.getElementById('profileFullName');
         this.cancelExpButton();
         this.btnNewExpanse();
     }

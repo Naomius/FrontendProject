@@ -4,12 +4,26 @@ import {Auth} from "../services/auth.js";
 
 export class IncomeAndExpanses {
     constructor() {
+        this.profileElement  =  document.getElementById('profileIssue');
+        this.profileFullNameElement  =  document.getElementById('profileFullName');
         this.createIncomeBtn();
         this.incomeExpenseGet();
         this.createExpenseBtn();
         this.deleteModal();
-        this.dateFunc()
-        this.todayFilter()
+        this.dateFunc();
+        this.todayFilter();
+        this.toggleUser();
+    }
+
+    toggleUser() {
+        const userInfo = Auth.getUserInfo();
+        const accessToken = localStorage.getItem(Auth.accessTokenKey);
+        if (userInfo && accessToken) {
+            this.profileElement.style.display = 'block';
+            this.profileFullNameElement.innerText = userInfo.fullName;
+        } else {
+            this.profileElement.style.display = 'none';
+        }
     }
 
     createIncomeBtn() {
@@ -115,9 +129,9 @@ export class IncomeAndExpanses {
         const today = new Date();
         const now = today.toLocaleDateString('en-ca');
 
-        const todayResult = await CustomHttp.request(config.host + '/operations?period=interval&dateFrom='`${now}&dateTo=${now}`)
-       console.log(todayResult)
-        document.querySelector('#todayFilter').addEventListener('click', )
+        // const todayResult = await CustomHttp.request(config.host + '/operations?period=interval&dateFrom='`${now}&dateTo=${now}`)
+       // console.log(todayResult)
+       //  document.querySelector('#todayFilter').addEventListener('click', )
     }
 
 }

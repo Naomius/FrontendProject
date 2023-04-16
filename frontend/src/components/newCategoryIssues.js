@@ -4,10 +4,23 @@ import config from "../../config/config.js";
 
 export class NewCategoryIssues {
     constructor() {
+        this.profileElement  =  document.getElementById('profileIssue');
+        this.profileFullNameElement  =  document.getElementById('profileFullName');
         this.cancelButton();
         this.btnNewIssues();
+        this.toggleUser();
     }
 
+    toggleUser() {
+        const userInfo = Auth.getUserInfo();
+        const accessToken = localStorage.getItem(Auth.accessTokenKey);
+        if (userInfo && accessToken) {
+            this.profileElement.style.display = 'block';
+            this.profileFullNameElement.innerText = userInfo.fullName;
+        } else {
+            this.profileElement.style.display = 'none';
+        }
+    }
 
     btnNewIssues() {
         const that = this;

@@ -1,14 +1,29 @@
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
 import {UrlManager} from "../utils/url-manager.js";
+import {Auth} from "../services/auth";
 
 
 export class EditCategoryIssues {
     constructor() {
+        this.profileElement  =  document.getElementById('profileIssue');
+        this.profileFullNameElement  =  document.getElementById('profileFullName');
         this.routeParams = UrlManager.getQueryParams();
         this.cancelButton();
         this.editIssueIncome();
         this.saveButton();
+        this.toggleUser();
+    }
+
+    toggleUser() {
+        const userInfo = Auth.getUserInfo();
+        const accessToken = localStorage.getItem(Auth.accessTokenKey);
+        if (userInfo && accessToken) {
+            this.profileElement.style.display = 'block';
+            this.profileFullNameElement.innerText = userInfo.fullName;
+        } else {
+            this.profileElement.style.display = 'none';
+        }
     }
 
     cancelButton() {

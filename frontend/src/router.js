@@ -170,13 +170,13 @@ export class Router {
         const userInfo = Auth.getUserInfo();
         const accessToken = localStorage.getItem(Auth.accessTokenKey);
         if (userInfo && accessToken) {
-            this.profileElement.style.display = 'block';
-            this.profileFullNameElement.innerText = userInfo.fullName;
+            // this.profileElement.style.display = 'block';
+            // this.profileFullNameElement.innerText = userInfo.fullName;
             this.dropDownToggle();
             this.categoryToggle();
             this.getBalance();
         } else {
-            this.profileElement.style.display = 'none';
+            // this.profileElement.style.display = 'none';
         }
 
         newRoute.load()

@@ -5,13 +5,14 @@ import {EditCategoryIssues} from "./editCategoryIssues.js";
 
 export class Issue {
     constructor() {
+        this.profileElement  =  document.getElementById('profileIssue');
+        this.profileFullNameElement  =  document.getElementById('profileFullName');
         // this.categoryToggle();
         this.getBalance();
         this.incomeIssue();
         // this.editIncomePage();
         this.deleteModal();
-        this.newCategoryIssues();
-
+        this.toggleUser();
     }
 
     // categoryToggle() {
@@ -19,6 +20,17 @@ export class Issue {
     //         document.getElementById("home-collapse").classList.toggle("show")
     //     };
     // }
+
+    toggleUser() {
+        const userInfo = Auth.getUserInfo();
+        const accessToken = localStorage.getItem(Auth.accessTokenKey);
+        if (userInfo && accessToken) {
+            this.profileElement.style.display = 'block';
+            this.profileFullNameElement.innerText = userInfo.fullName;
+        } else {
+            this.profileElement.style.display = 'none';
+        }
+    }
 
 
     editIncomePage() {
@@ -105,19 +117,6 @@ export class Issue {
             incomeBlock.innerHTML += newBlock;
         })
     }
-
-    dropDownToggle() {
-        document.getElementById('profileIssue').onclick = () => {
-            document.getElementById("myDropdown").classList.toggle("show")
-        };
-    }
-
-    categoryToggle() {
-        document.getElementById('navItemToggle').onclick = () => {
-            document.getElementById("home-collapse").classList.toggle("show")
-        };
-    }
-
 
 }
 

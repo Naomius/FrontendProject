@@ -1,13 +1,28 @@
 import {UrlManager} from "../utils/url-manager.js";
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
+import {Auth} from "../services/auth";
 
 export class EditCategoryExpanses {
     constructor() {
+        this.profileElement  =  document.getElementById('profileIssue');
+        this.profileFullNameElement  =  document.getElementById('profileFullName');
         this.routeParams = UrlManager.getQueryParams();
         this.cancelButton();
         this.saveButton();
-        this.editExpenseIncome();
+        this.editExpense();
+        this.toggleUser();
+    }
+
+    toggleUser() {
+        const userInfo = Auth.getUserInfo();
+        const accessToken = localStorage.getItem(Auth.accessTokenKey);
+        if (userInfo && accessToken) {
+            this.profileElement.style.display = 'block';
+            this.profileFullNameElement.innerText = userInfo.fullName;
+        } else {
+            this.profileElement.style.display = 'none';
+        }
     }
 
     cancelButton() {
@@ -23,7 +38,7 @@ export class EditCategoryExpanses {
         })
     }
 
-    async editExpenseIncome() {
+    async editExpense() {
         const resultData = await CustomHttp.request(config.host + '/categories/expense/' + this.routeParams.id)
 
         const inputValue = document.querySelector('.textFromExpanses').value = `${resultData.title}`;

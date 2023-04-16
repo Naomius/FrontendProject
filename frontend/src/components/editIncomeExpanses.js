@@ -4,6 +4,8 @@ import {UrlManager} from "../utils/url-manager.js";
 
 export class EditIncomeExpanses {
     constructor() {
+        this.profileElement  =  document.getElementById('profileIssue');
+        this.profileFullNameElement  =  document.getElementById('profileFullName');
         this.routeParams = UrlManager.getQueryParams();
         this.cancelBtn();
         this.saveBtn();

@@ -4,9 +4,23 @@ import config from "../../config/config.js";
 
 export class CreatExpensesIncome {
     constructor() {
+        this.profileElement  =  document.getElementById('profileIssue');
+        this.profileFullNameElement  =  document.getElementById('profileFullName');
         this.cancelBtn();
         this.saveBtn();
         this.allCategoriesExpenses();
+        this.toggleUser();
+    }
+
+    toggleUser() {
+        const userInfo = Auth.getUserInfo();
+        const accessToken = localStorage.getItem(Auth.accessTokenKey);
+        if (userInfo && accessToken) {
+            this.profileElement.style.display = 'block';
+            this.profileFullNameElement.innerText = userInfo.fullName;
+        } else {
+            this.profileElement.style.display = 'none';
+        }
     }
 
     cancelBtn() {
