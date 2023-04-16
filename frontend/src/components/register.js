@@ -12,7 +12,7 @@ export class Register {
 
         const accessToken = localStorage.getItem(Auth.accessTokenKey);
         if (accessToken) {
-            location.href = '#/issue'
+            location.href = '#/mainIncomes'
             return;
         }
 
@@ -150,7 +150,7 @@ export class Register {
                             fullName: result.user.fullName,
                             userId: result.user.id
                         })
-                        location.href = '#/issue'
+                        location.href = '#/mainIncomes'
                     }
                 } catch (error) {
                     console.log(error);

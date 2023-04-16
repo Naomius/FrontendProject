@@ -12,6 +12,8 @@ export class EditCategoryExpanses {
         this.saveButton();
         this.editExpense();
         this.toggleUser();
+        this.dropDownToggle();
+        this.categoryToggle();
     }
 
     toggleUser() {
@@ -64,6 +66,18 @@ export class EditCategoryExpanses {
         } catch (error) {
 
         }
+    }
+
+    dropDownToggle() {
+        document.getElementById('profileIssue').onclick = () => {
+            document.getElementById("myDropdown").classList.toggle("show")
+        };
+    }
+
+    categoryToggle() {
+        document.getElementById('navItemToggle').onclick = () => {
+            document.getElementById("home-collapse").classList.toggle("show")
+        };
     }
 
 

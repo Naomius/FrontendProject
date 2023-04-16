@@ -6,14 +6,23 @@ export class IncomeAndExpanses {
     constructor() {
         this.profileElement  =  document.getElementById('profileIssue');
         this.profileFullNameElement  =  document.getElementById('profileFullName');
+        this.tBodyBlock = document.querySelector('.tbodyBlock');
         this.createIncomeBtn();
-        this.incomeExpenseGet();
+        // this.incomeExpenseGet();
+        this.allDaysFilter()
         this.createExpenseBtn();
         this.deleteModal();
         this.dateFunc();
-        this.todayFilter();
+        this.todayFilterBtn();
+        this.weekFilterBtn();
+        this.monthFilterBtn();
+        this.yearFilterBtn();
+        this.intervalFilterBtn();
         this.toggleUser();
+        this.dropDownToggle();
+        this.categoryToggle();
     }
+
 
     toggleUser() {
         const userInfo = Auth.getUserInfo();
@@ -24,6 +33,18 @@ export class IncomeAndExpanses {
         } else {
             this.profileElement.style.display = 'none';
         }
+    }
+
+    dropDownToggle() {
+        document.getElementById('profileIssue').onclick = () => {
+            document.getElementById("myDropdown").classList.toggle("show")
+        };
+    }
+
+    categoryToggle() {
+        document.getElementById('navItemToggle').onclick = () => {
+            document.getElementById("home-collapse").classList.toggle("show")
+        };
     }
 
     createIncomeBtn() {
@@ -37,14 +58,83 @@ export class IncomeAndExpanses {
             location.href = '#/creatExpensesIncome'
         }
     }
+//----------Filters ---------
+
+    todayFilterBtn() {
+        document.querySelector('#todayFilter').onclick = this.todayFilter()
+    }
+
+    allDaysFilter() {
+        document.querySelector('#allDaysFilter').onclick = () => {
+            this.incomeExpenseGet();
+        }
+    }
+
+    weekFilterBtn() {
+        document.querySelector('#weekFilter').onclick = () => {
+            this.weekFilter()
+        }
+    }
+
+    monthFilterBtn() {
+        document.querySelector('#monthFilter').onclick = () => {
+            this.monthFilter()
+        }
+    }
+
+    yearFilterBtn() {
+        document.querySelector('#yearFilter').onclick = () => {
+            this.yearFilter()
+        }
+    }
+
+    intervalFilterBtn() {
+        document.querySelector('#intervalFilter').onclick = () => {
+            this.intervalFilter()
+        }
+    }
 
     async incomeExpenseGet() {
         const result = await CustomHttp.request(config.host + '/operations?period=all');
+        this.tBodyBlock.innerHTML = '';
         console.log(result)
         this.renderIncomeExpense(result)
         this.editIncomePage();
-
     }
+
+    async todayFilter() {
+        const todayResult = await CustomHttp.request(config.host + '/operations')
+        this.tBodyBlock.innerHTML = '';
+        this.renderIncomeExpense(todayResult)
+    }
+
+    async weekFilter() {
+        const result = await CustomHttp.request(config.host + '/operations?period=week')
+        this.tBodyBlock.innerHTML = '';
+        this.renderIncomeExpense(result)
+    }
+
+    async monthFilter() {
+        const result = await CustomHttp.request(config.host + '/operations?period=month')
+        this.tBodyBlock.innerHTML = '';
+        this.renderIncomeExpense(result)
+    }
+
+    async yearFilter() {
+        const result = await CustomHttp.request(config.host + '/operations?period=year')
+        this.tBodyBlock.innerHTML = '';
+        this.renderIncomeExpense(result)
+    }
+
+    async intervalFilter() {
+        const inputFromTo = document.querySelector('.inputDateTo').value
+        const inputFrom = document.querySelector('.inputDateFrom').value
+        const result = await CustomHttp.request(config.host + '/operations?period=interval'+`&dateFrom=${inputFrom}&dateTo=${inputFromTo}`)
+        this.tBodyBlock.innerHTML = '';
+        this.renderIncomeExpense(result)
+    }
+
+//--------------End of Filters--------------
 
     renderIncomeExpense(result) {
         const trElement = document.querySelector('.tbodyBlock');
@@ -125,13 +215,6 @@ export class IncomeAndExpanses {
           return now
     }
 
-   async todayFilter() {
-        const today = new Date();
-        const now = today.toLocaleDateString('en-ca');
 
-        // const todayResult = await CustomHttp.request(config.host + '/operations?period=interval&dateFrom='`${now}&dateTo=${now}`)
-       // console.log(todayResult)
-       //  document.querySelector('#todayFilter').addEventListener('click', )
-    }
 
 }

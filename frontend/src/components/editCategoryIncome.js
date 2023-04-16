@@ -4,7 +4,7 @@ import {UrlManager} from "../utils/url-manager.js";
 import {Auth} from "../services/auth";
 
 
-export class EditCategoryIssues {
+export class EditCategoryIncome {
     constructor() {
         this.profileElement  =  document.getElementById('profileIssue');
         this.profileFullNameElement  =  document.getElementById('profileFullName');

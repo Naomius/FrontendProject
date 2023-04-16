@@ -116,3 +116,21 @@ a {
 .modal-dialog {
     z-index: 100;
 }
+
+.inputDateFrom {
+    width: 100px;
+    height: 31px;
+    padding-bottom: 0;
+    margin-left: 10px;
+    margin-right: 15px;
+}
+.inputDateTo{
+    width: 100px;
+    height: 31px;
+    padding-bottom: 0;
+    margin-left: 10px;
+}
+
+.incomeAndExpanses-sortButtons span {
+    font-weight: bold;
+}

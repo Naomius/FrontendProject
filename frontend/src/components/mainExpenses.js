@@ -1,10 +1,10 @@
 import {CustomHttp} from "../services/custom-http.js";
 import {Auth} from "../services/auth.js";
 import config from "../../config/config.js";
-import {EditCategoryIssues} from "./editCategoryIssues.js";
+import {EditCategoryIncome} from "./editCategoryIncome.js";
 import * as events from "events";
 
-export class ExpensesPage {
+export class MainExpenses {
     constructor() {
         this.profileElement  =  document.getElementById('profileIssue');
         this.profileFullNameElement  =  document.getElementById('profileFullName');
@@ -12,6 +12,8 @@ export class ExpensesPage {
         this.incomeExpanses();
         this.deleteModal();
         this.toggleUser();
+        this.dropDownToggle();
+        this.categoryToggle();
     }
 
     toggleUser() {
@@ -23,6 +25,18 @@ export class ExpensesPage {
         } else {
             this.profileElement.style.display = 'none';
         }
+    }
+
+    dropDownToggle() {
+        document.getElementById('profileIssue').onclick = () => {
+            document.getElementById("myDropdown").classList.toggle("show")
+        };
+    }
+
+    categoryToggle() {
+        document.getElementById('navItemToggle').onclick = () => {
+            document.getElementById("home-collapse").classList.toggle("show")
+        };
     }
 
     newCategoryExpanses() {

@@ -8,7 +8,12 @@ export class NewCategoryExpanses {
         this.profileFullNameElement  =  document.getElementById('profileFullName');
         this.cancelExpButton();
         this.btnNewExpanse();
+        this.dropDownToggle();
+        this.categoryToggle();
+        this.toggleUser();
     }
+
+
 
     btnNewExpanse() {
         const that = this;
@@ -44,5 +49,30 @@ export class NewCategoryExpanses {
             } catch (error) {
                 console.log(error)
             }
+    }
+
+    dropDownToggle() {
+        document.getElementById('profileIssue').onclick = () => {
+            document.getElementById("myDropdown").classList.toggle("show")
+        };
+    }
+
+    categoryToggle() {
+        document.getElementById('navItemToggle').onclick = () => {
+            document.getElementById("home-collapse").classList.toggle("show")
+        };
+    }
+
+    toggleUser() {
+        const userInfo = Auth.getUserInfo();
+        const accessToken = localStorage.getItem(Auth.accessTokenKey);
+        if (userInfo && accessToken) {
+            this.profileElement.style.display = 'block';
+            this.profileFullNameElement.innerText = userInfo.fullName;
+            // this.dropDownToggle();
+            // this.categoryToggle();
+        } else {
+            this.profileElement.style.display = 'none';
+        }
     }
 }

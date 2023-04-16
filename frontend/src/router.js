@@ -1,9 +1,9 @@
 import {Register} from "./components/register.js";
-import {Issue} from "./components/issue.js";
+import {MainIncomes} from "./components/mainIncomes.js";
 import {Auth} from "./services/auth.js";
-import {EditCategoryIssues} from "./components/editCategoryIssues.js";
-import {NewCategoryIssues} from "./components/newCategoryIssues.js";
-import {ExpensesPage} from "./components/expensesPage.js"
+import {EditCategoryIncome} from "./components/editCategoryIncome.js";
+import {NewCategoryIncome} from "./components/newCategoryIncome.js";
+import {MainExpenses} from "./components/mainExpenses.js"
 import {CustomHttp} from "./services/custom-http.js";
 import config from "../config/config.js";
 import {NewCategoryExpanses} from "./components/newCategoryExpanses";
@@ -12,6 +12,7 @@ import {IncomeAndExpanses} from "./components/incomeAndExpanses";
 import {CreatIncomeExpanses} from "./components/creatIncomeExpanses";
 import {CreatExpensesIncome} from "./components/creatExpensesIncome";
 import {EditIncomeExpanses} from "./components/editIncomeExpanses";
+import {MainPage} from "./components/mainPage";
 
 export class Router {
     constructor() {
@@ -43,43 +44,43 @@ export class Router {
                 }
             },
             {
-                route: '#/issue',
+                route: '#/mainIncomes',
                 title: 'Доходы',
-                template: 'templates/issue.html',
-                styles: 'styles/issue.css',
-                scripts: 'src/components/issue.js',
+                template: 'templates/mainIncomes.html',
+                styles: 'styles/mainIncomes.css',
+                scripts: 'src/components/mainIncomes.js',
                 load: () => {
-                    new Issue();
+                    new MainIncomes();
                 }
             },
             {
-                route: '#/editCategoryIssues',
+                route: '#/editCategoryIncome',
                 title: 'Редактирование доходов',
-                template: 'templates/editCategoryIssues.html',
-                styles: 'styles/editCategoryIssues.css',
-                scripts: 'src/components/editCategoryIssues.js',
+                template: 'templates/editCategoryIncome.html',
+                styles: 'styles/editCategoryIncome.css',
+                scripts: 'src/components/editCategoryIncome.js',
                 load: () => {
-                    new EditCategoryIssues();
+                    new EditCategoryIncome();
                 }
             },
             {
-                route: '#/newCategoryIssues',
+                route: '#/newCategoryIncome',
                 title: 'Создание новых доходов',
-                template: 'templates/newCategoryIssues.html',
-                styles: 'styles/newCategoryIssues.css',
-                scripts: 'src/components/newCategoryIssues.js',
+                template: 'templates/newCategoryIncome.html',
+                styles: 'styles/newCategoryIncome.css',
+                scripts: 'src/components/newCategoryIncome.js',
                 load: () => {
-                    new NewCategoryIssues();
+                    new NewCategoryIncome();
                 }
             },
             {
-                route: '#/expensesPage',
+                route: '#/mainExpenses',
                 title: 'Расходы',
-                template: 'templates/expensesPage.html',
-                styles: 'styles/expensesPage.css',
-                scripts: 'src/components/expensesPage.js',
+                template: 'templates/mainExpenses.html',
+                styles: 'styles/mainExpenses.css',
+                scripts: 'src/components/mainExpenses.js',
                 load: () => {
-                    new ExpensesPage();
+                    new MainExpenses();
                 }
             },
             {
@@ -142,6 +143,16 @@ export class Router {
                     new EditIncomeExpanses();
                 }
             },
+            {
+                route: '#/mainPage',
+                title: 'Главная страница',
+                template: 'templates/mainPage.html',
+                styles: 'styles/mainPage.css',
+                scripts: 'src/components/mainPage.js',
+                load: () => {
+                    new MainPage();
+                }
+            },
         ]
     }
 
@@ -172,8 +183,8 @@ export class Router {
         if (userInfo && accessToken) {
             // this.profileElement.style.display = 'block';
             // this.profileFullNameElement.innerText = userInfo.fullName;
-            this.dropDownToggle();
-            this.categoryToggle();
+            // this.dropDownToggle();
+            // this.categoryToggle();
             this.getBalance();
         } else {
             // this.profileElement.style.display = 'none';
@@ -199,6 +210,6 @@ export class Router {
     async getBalance() {
         const res = await CustomHttp.request(config.host + '/balance');
         console.log(res)
-        document.querySelector('.userBalance').innerHTML = `${res.balance}`
+        document.querySelector('.userBalance').innerHTML = `${res.balance}$`
     }
 }

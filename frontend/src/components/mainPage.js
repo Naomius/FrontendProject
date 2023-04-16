@@ -1,3 +1,44 @@
+import {CustomHttp} from "../services/custom-http.js";
+import {Auth} from "../services/auth.js";
+import config from "../../config/config.js";
+
+export class MainPage {
+    constructor() {
+        this.profileElement  =  document.getElementById('profileIssue');
+        this.profileFullNameElement  =  document.getElementById('profileFullName');
+        this.toggleUser();
+        this.dropDownToggle();
+        this.categoryToggle();
+    }
+
+    dropDownToggle() {
+        document.getElementById('profileIssue').onclick = () => {
+            document.getElementById("myDropdown").classList.toggle("show")
+        };
+    }
+
+    categoryToggle() {
+        document.getElementById('navItemToggle').onclick = () => {
+            document.getElementById("home-collapse").classList.toggle("show")
+        };
+    }
+
+    toggleUser() {
+        const userInfo = Auth.getUserInfo();
+        const accessToken = localStorage.getItem(Auth.accessTokenKey);
+        if (userInfo && accessToken) {
+            this.profileElement.style.display = 'block';
+            this.profileFullNameElement.innerText = userInfo.fullName;
+            // this.dropDownToggle();
+            // this.categoryToggle();
+        } else {
+            this.profileElement.style.display = 'none';
+        }
+    }
+
+}
+
+
 // const DATA_COUNT = 5;
 // const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 100};
 //

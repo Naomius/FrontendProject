@@ -2,13 +2,15 @@ import {Auth} from "../services/auth.js";
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
 
-export class NewCategoryIssues {
+export class NewCategoryIncome {
     constructor() {
         this.profileElement  =  document.getElementById('profileIssue');
         this.profileFullNameElement  =  document.getElementById('profileFullName');
         this.cancelButton();
         this.btnNewIssues();
         this.toggleUser();
+        this.dropDownToggle();
+        this.categoryToggle();
     }
 
     toggleUser() {
@@ -59,6 +61,17 @@ export class NewCategoryIssues {
     }
 
 
+    dropDownToggle() {
+        document.getElementById('profileIssue').onclick = () => {
+            document.getElementById("myDropdown").classList.toggle("show")
+        };
+    }
+
+    categoryToggle() {
+        document.getElementById('navItemToggle').onclick = () => {
+            document.getElementById("home-collapse").classList.toggle("show")
+        };
+    }
 
     // async creatNewCategory() {
     //     let xToken = localStorage.getItem(Auth.accessTokenKey);
