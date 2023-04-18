@@ -4,23 +4,17 @@ import {Auth} from "../services/auth.js";
 
 export class IncomeAndExpanses {
     constructor() {
-        this.profileElement  =  document.getElementById('profileIssue');
-        this.profileFullNameElement  =  document.getElementById('profileFullName');
+        this.profileElement = document.getElementById('profileIssue');
+        this.profileFullNameElement = document.getElementById('profileFullName');
         this.tBodyBlock = document.querySelector('.tbodyBlock');
         this.createIncomeBtn();
-        // this.incomeExpenseGet();
-        this.allDaysFilter()
         this.createExpenseBtn();
+        this.incomeExpenseGet();
         this.deleteModal();
-        this.dateFunc();
-        this.todayFilterBtn();
-        this.weekFilterBtn();
-        this.monthFilterBtn();
-        this.yearFilterBtn();
-        this.intervalFilterBtn();
         this.toggleUser();
         this.dropDownToggle();
         this.categoryToggle();
+        this.activeBtns()
     }
 
 
@@ -58,40 +52,67 @@ export class IncomeAndExpanses {
             location.href = '#/creatExpensesIncome'
         }
     }
+
 //----------Filters ---------
 
-    todayFilterBtn() {
-        document.querySelector('#todayFilter').onclick = this.todayFilter()
-    }
+    activeBtns() {
+        const today = document.getElementById('today');
+        const week = document.getElementById('week');
+        const month = document.getElementById('month');
+        const year = document.getElementById('year');
+        const all = document.getElementById('all');
+        const interval = document.getElementById('interval');
+        const dateFrom = document.getElementById('dateFrom');
+        const dateTo = document.getElementById('dateTo');
+        const itemTabs = document.getElementsByClassName('item-tabs');
 
-    allDaysFilter() {
-        document.querySelector('#allDaysFilter').onclick = () => {
-            this.incomeExpenseGet();
+        function check() {
+            [].forEach.call(itemTabs, function (el) {
+                el.classList.remove('active')
+            });
         }
-    }
 
-    weekFilterBtn() {
-        document.querySelector('#weekFilter').onclick = () => {
+
+        today.onclick = () => {
+            check();
+            today.classList.add('active');
+            this.todayFilter()
+        }
+
+        week.onclick = () => {
+            check();
+            week.classList.add('active')
             this.weekFilter()
         }
-    }
-
-    monthFilterBtn() {
-        document.querySelector('#monthFilter').onclick = () => {
+        month.onclick = () => {
+            check();
+            month.classList.add('active')
             this.monthFilter()
         }
-    }
 
-    yearFilterBtn() {
-        document.querySelector('#yearFilter').onclick = () => {
+        year.onclick = () => {
+            check();
+            year.classList.add('active')
             this.yearFilter()
         }
-    }
 
-    intervalFilterBtn() {
-        document.querySelector('#intervalFilter').onclick = () => {
-            this.intervalFilter()
+        all.onclick = () => {
+            check();
+            all.classList.add('active')
         }
+
+        interval.onclick = (async () => {
+            check();
+            interval.classList.add('active')
+            this.intervalFilter()
+
+            if (interval.classList.contains('active')) {
+                dateFrom.removeAttribute('disabled');
+                dateTo.removeAttribute('disabled');
+            }
+        });
+
+
     }
 
     async incomeExpenseGet() {
@@ -127,9 +148,9 @@ export class IncomeAndExpanses {
     }
 
     async intervalFilter() {
-        const inputFromTo = document.querySelector('.inputDateTo').value
-        const inputFrom = document.querySelector('.inputDateFrom').value
-        const result = await CustomHttp.request(config.host + '/operations?period=interval'+`&dateFrom=${inputFrom}&dateTo=${inputFromTo}`)
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
+        const result = await CustomHttp.request(config.host + '/operations?period=interval' + `&dateFrom=${dateFrom}&dateTo=${dateTo}`)
         this.tBodyBlock.innerHTML = '';
         this.renderIncomeExpense(result)
     }
@@ -161,7 +182,7 @@ export class IncomeAndExpanses {
                               `;
             trElement.innerHTML += newBlock
         })
-            this.deleteModal()
+        this.deleteModal()
     }
 
     async deleteIssueCategory(categoryBlockId) {
@@ -207,12 +228,6 @@ export class IncomeAndExpanses {
                 }
             })
         })
-    }
-
-    dateFunc() {
-        const today = new Date()
-        const now = today.toLocaleDateString('ru-EU');
-          return now
     }
 
 

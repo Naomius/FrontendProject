@@ -1,15 +1,24 @@
 import {CustomHttp} from "../services/custom-http.js";
 import {Auth} from "../services/auth.js";
 import config from "../../config/config.js";
+import Chart from "chart.js/auto";
+import {Operations} from "../services/operations.js";
+
 
 export class MainPage {
     constructor() {
+        this.diagrams = document.getElementById('diagrams')
         this.profileElement  =  document.getElementById('profileIssue');
         this.profileFullNameElement  =  document.getElementById('profileFullName');
         this.toggleUser();
-        this.dropDownToggle();
-        this.categoryToggle();
+        this.showDiagram('today');
+        this.incomeData = [];
+        this.expenseData = [];
+        this.activeFilter();
     }
+
+
+
 
     dropDownToggle() {
         document.getElementById('profileIssue').onclick = () => {
@@ -29,49 +38,192 @@ export class MainPage {
         if (userInfo && accessToken) {
             this.profileElement.style.display = 'block';
             this.profileFullNameElement.innerText = userInfo.fullName;
-            // this.dropDownToggle();
-            // this.categoryToggle();
+            this.dropDownToggle();
+            this.categoryToggle();
         } else {
             this.profileElement.style.display = 'none';
         }
     }
 
+    async showDiagram(value, dateFrom, dateTo) {
+        await this.getData(value, dateFrom, dateTo);
+        await this.incomeDiagrams();
+    }
+
+    async getData(value, dateFrom, dateTo) {
+        const inc = [];
+        const dec = [];
+        const data = await Operations.getOperations(value, dateFrom, dateTo);
+        console.log(data)
+        const incomeData = data.filter(i => i.type === 'income').forEach(obj => {
+            const a = inc.find(i => i.category === obj.category);
+            if (a) {
+                let amount = a.amount + obj.amount;
+                a.amount = amount
+            } else {
+                inc.push({
+                    category: obj.category,
+                    amount: obj.amount
+                })
+            }
+        });
+        const expenseData = data.filter(i => i.type === 'expense').forEach(obj => {
+            const a = dec.find(i => i.category === obj.category);
+            if (a) {
+                let amount = a.amount + obj.amount;
+                a.amount = amount
+            } else {
+                dec.push({
+                    category: obj.category,
+                    amount: obj.amount
+                })
+            }
+        });
+        this.incomeData = inc;
+        this.expenseData = dec;
+
+        this.diagrams.innerHTML = '';
+        this.diagrams.innerHTML = `
+        <canvas class="diagrams-item" id="income-diagram"></canvas>
+            <div class="verticalLine"></div>
+            <canvas class="diagrams-item" id="expense-diagram"></canvas>
+        `
+    }
+
+    async incomeDiagrams() {
+        const incomeChart = document.getElementById('income-diagram')
+        const expenseChart = document.getElementById('expense-diagram')
+        incomeChart.parentNode.style.height = '430px';
+        incomeChart.parentNode.style.width = '430px';
+        expenseChart.parentNode.style.height = '430px';
+        expenseChart.parentNode.style.width = '430px';
+        new Chart(
+            incomeChart,
+            {
+                type: 'pie',
+                data: {
+                    labels: this.incomeData.map(row => row.category),
+                    datasets: [
+                        {
+                            label: 'Доход в $',
+                            data: this.incomeData.map(row => row.amount)
+                        }
+                    ]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Доходы',
+                            color: '#290661',
+                            font: {weight: 'bold', size: '28px'}
+                        }
+                    }
+                }
+            }
+        );
+        new Chart(
+            expenseChart,
+            {
+                type: 'pie',
+                data: {
+                    labels: this.expenseData.map(row => row.category),
+                    datasets: [
+                        {
+                            label: 'Расход в $',
+                            data: this.expenseData.map(row => row.amount)
+                        }
+                    ]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Расходы',
+                            color: '#290661',
+                            font: {weight: 'bold', size: '28px'}
+                        }
+                    }
+                }
+            }
+        );
+
+
+    };
+
+    activeFilter() {
+        const today = document.getElementById('today');
+        const week = document.getElementById('week');
+        const month = document.getElementById('month');
+        const year = document.getElementById('year');
+        const all = document.getElementById('all');
+        const interval = document.getElementById('interval');
+        const dateFrom = document.getElementById('dateFrom');
+        const dateTo = document.getElementById('dateTo');
+        const itemTabs = document.getElementsByClassName('item-tabs');
+
+        function check() {
+            [].forEach.call(itemTabs, function (el) {
+                el.classList.remove('active')
+            });
+            if (!interval.classList.contains('active')) {
+                dateFrom.setAttribute('disabled', 'disabled');
+                dateTo.setAttribute('disabled', 'disabled');
+            }
+        }
+
+        today.onclick = (async () => {
+            check();
+            today.classList.add('active');
+            await this.showDiagram('today');
+        });
+        week.onclick = (async () => {
+            check();
+            week.classList.add('active')
+            await this.showDiagram('week');
+        });
+        month.onclick = (async () => {
+            check();
+            month.classList.add('active')
+            await this.showDiagram('month');
+        });
+        year.onclick = (async () => {
+            check();
+            year.classList.add('active')
+            await this.showDiagram('year');
+        });
+        all.onclick = (async () => {
+            check();
+            all.classList.add('active')
+            await this.showDiagram('all');
+        });
+        interval.onclick = (async () => {
+            check();
+            interval.classList.add('active')
+
+            if (dateFrom.value && dateTo.value) {
+                await this.showDiagram('interval', dateFrom.value, dateTo.value);
+            }
+            if (interval.classList.contains('active')) {
+                dateFrom.removeAttribute('disabled');
+                dateTo.removeAttribute('disabled');
+            }
+
+
+            dateFrom.onchange = (() => {
+                if (dateFrom.value && dateTo.value) {
+                    this.showDiagram('interval', dateFrom.value, dateTo.value);
+                }
+            })
+            dateTo.onchange = (() => {
+                if (dateFrom.value && dateTo.value) {
+                    this.showDiagram('interval', dateFrom.value, dateTo.value);
+                }
+            })
+        });
+    }
+
+
 }
 
 
-// const DATA_COUNT = 5;
-// const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 100};
-//
-// document.addEventListener('DOMContentLoaded', () => { // структура документа загружена
-//
-//     new Chart( // инициализируем плагин
-//         document.querySelector('.chart'), // первым параметром передаем элемент canvas по селектору
-//         // вторым параметром передаем настройки в виде объекта
-//         {
-//             type: 'pie', // тип графика, в данном случае линейный
-//             data: { // общие данные графика в виде объекта
-//                 labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'], // метки по оси X
-//                 datasets: [ // набор данных, который будет отрисовываться в виде массива с объектами
-//                     {
-//                         label: 'Dataset 1',
-//                         data: Utils.numbers(NUMBER_CFG),
-//                         backgroundColor: Object.values(Utils.CHART_COLORS),
-//                     }
-//                 ]
-//             },
-//             options: {
-//                 responsive: true,
-//                 plugins: {
-//                     legend: {
-//                         position: 'top',
-//                     },
-//                     title: {
-//                         display: true,
-//                         text: 'Доходы'
-//                     }
-//                 }
-//             } // дополнительные опции для графика в виде объекта, если не нужны - передаем пустой объект
-//         }
-//     );
-//
-// })

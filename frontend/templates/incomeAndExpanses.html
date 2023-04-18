@@ -65,13 +65,20 @@
       <button type="button" class="btn btn-danger createExpenseBtn">Создать расход</button>
 
       <div class="incomeAndExpanses-sortButtons mt-5">
-        <button type="button" class="btn btn-outline-secondary me-3" id="todayFilter">Сегодня</button>
-        <button type="button" class="btn btn-outline-secondary me-3" id="weekFilter">Неделя</button>
-        <button type="button" class="btn btn-outline-secondary me-3" id="monthFilter">Месяц</button>
-        <button type="button" class="btn btn-outline-secondary me-3" id="yearFilter">Год</button>
-        <button type="button" class="btn btn-outline-secondary me-3" id="allDaysFilter">Все</button>
-        <button type="button" class="btn btn-outline-secondary me-3" id="intervalFilter">Интервал</button>
-        <p class="dateToDate"><span>c</span> <a href="javascript:void(0)"><input type="date" class="inputDateFrom"></a> <span>по</span> <a href="javascript:void(0)"><input type="date" class="inputDateTo"></a></p>
+        <button type="button" class="btn btn-outline-secondary me-3 item-tabs active" id="today">Сегодня</button>
+        <button type="button" class="btn btn-outline-secondary me-3 item-tabs" id="week">Неделя</button>
+        <button type="button" class="btn btn-outline-secondary me-3 item-tabs" id="month">Месяц</button>
+        <button type="button" class="btn btn-outline-secondary me-3 item-tabs" id="year">Год</button>
+        <button type="button" class="btn btn-outline-secondary me-3 item-tabs" id="all">Все</button>
+        <button type="button" class="btn btn-outline-secondary me-3 item-tabs" id="interval">Интервал</button>
+        <div class="item-tabs-date">
+          <span>c</span>
+          <input class="tabs-input" type="text" placeholder=" Дата" onfocus="(this.type='date')"
+                 onblur="(this.type='text')" disabled id="dateFrom">
+          <span>по</span>
+          <input class="tabs-input" type="text" placeholder="Дата" disabled onfocus="(this.type='date')"
+                 onblur="(this.type='text')" id="dateTo">
+        </div>
       </div>
 
       <table class="table incomeAndExpanses-table mt-4 text-center">

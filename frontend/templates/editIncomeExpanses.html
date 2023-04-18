@@ -9,7 +9,7 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto justify-content-start mt-4">
       <li class="nav-item me-0">
-        <a href="javascript:void(0)" class="nav-link fw-normal text-dark" aria-current="page">
+        <a href="#/mainPage" class="nav-link fw-normal text-dark" aria-current="page">
           <svg class="bi pe-none me-0" width="16" height="16" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 12.3964V5.89641H2.5V12.3964C2.5 12.6726 2.72386 12.8964 3 12.8964H12C12.2761 12.8964 12.5 12.6726 12.5 12.3964V5.89641H13.5V12.3964C13.5 13.2248 12.8284 13.8964 12 13.8964H3C2.17157 13.8964 1.5 13.2248 1.5 12.3964Z" fill="#052C65"/>
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12.5 1.39641V4.89641L10.5 2.89641V1.39641C10.5 1.12027 10.7239 0.896409 11 0.896409H12C12.2761 0.896409 12.5 1.12027 12.5 1.39641Z" fill="#052C65"/>
@@ -35,8 +35,8 @@
         </button>
         <div class="collapse" id="home-collapse" style="">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li class="nav-item-drop_list1"><a href="#/issue" class="link-dark d-inline-flex text-decoration-none rounded"><span>Доходы</span></a></li>
-            <li class="nav-item-drop_list2"><a href="#/expensesPage" class="link-dark d-inline-flex text-decoration-none rounded"><span>Расходы</span></a></li>
+            <li class="nav-item-drop_list1"><a href="#/mainIncomes" class="link-dark d-inline-flex text-decoration-none rounded"><span>Доходы</span></a></li>
+            <li class="nav-item-drop_list2"><a href="#/mainExpenses" class="link-dark d-inline-flex text-decoration-none rounded"><span>Расходы</span></a></li>
           </ul>
         </div>
       </li>
@@ -63,10 +63,15 @@
       <h1 class="fw-bold mb-5">Редактирование дохода/расхода</h1>
       <form>
         <div class="input-group mb-3">
-          <input type="text" class="form-control" id="box1" disabled>
+          <select class="form-select" id="box1" required>
+            <option value="expense" id="exp">Расход</option>
+            <option value="income" id="inc">Доход</option>
+          </select>
         </div>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" id="box2" disabled>
+        <div class="input-group mb-3 selectIncome selectExpense">
+          <select class="form-select" id="box2">
+
+          </select>
         </div>
         <input class="form-control mb-3" id="incomeExpenseSum" type="number" placeholder="Сумма в $..." aria-label="default input example">
         <input class="form-control mb-3" id="incomeExpenseDate" type="date" placeholder="Дата..." aria-label="default input example">

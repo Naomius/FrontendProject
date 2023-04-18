@@ -1,6 +1,7 @@
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
 import {UrlManager} from "../utils/url-manager.js";
+import {Auth} from "../services/auth";
 
 export class EditIncomeExpanses {
     constructor() {
@@ -11,7 +12,33 @@ export class EditIncomeExpanses {
         this.saveBtn();
         this.editExpenseIncome();
         this.allCategoriesExpenses();
+        this.allCategoriesIncome()
+        this.toggleUser();
+    }
 
+    toggleUser() {
+        const userInfo = Auth.getUserInfo();
+        const accessToken = localStorage.getItem(Auth.accessTokenKey);
+        if (userInfo && accessToken) {
+            this.profileElement.style.display = 'block';
+            this.profileFullNameElement.innerText = userInfo.fullName;
+            this.dropDownToggle()
+            this.categoryToggle()
+        } else {
+            this.profileElement.style.display = 'none';
+        }
+    }
+
+    dropDownToggle() {
+        document.getElementById('profileIssue').onclick = () => {
+            document.getElementById("myDropdown").classList.toggle("show")
+        };
+    }
+
+    categoryToggle() {
+        document.getElementById('navItemToggle').onclick = () => {
+            document.getElementById("home-collapse").classList.toggle("show")
+        };
     }
 
     cancelBtn() {
@@ -34,6 +61,7 @@ export class EditIncomeExpanses {
 
         const inputType = document.querySelector('#box1').value = `${resultData.type}`;
         const inputCategory = document.querySelector('#box2').value = `${resultData.category}`;
+        console.log(inputCategory)
         const inputSum = document.querySelector('#incomeExpenseSum').value = `${resultData.amount}`;
         const inputDate = document.querySelector('#incomeExpenseDate').value = `${resultData.date}`;
         const inputComments = document.querySelector('#incomeExpenseTextarea').value = `${resultData.comment}`
@@ -43,12 +71,13 @@ export class EditIncomeExpanses {
         }
 
         this.allCategoriesExpenses(resultData)
+        this.allCategoriesIncome(resultData)
 
     }
 
     async putNewExpensesOrIncomes() {
         const inputType = document.querySelector('#box1').value;
-        // const inputCategory = document.querySelector('#box2').value;
+        const inputCategory = document.querySelector('#box2').value;
         const inputSum = document.querySelector('#incomeExpenseSum').value;
         const inputDate = document.querySelector('#incomeExpenseDate').value;
         const inputComments = document.querySelector('#incomeExpenseTextarea').value;
@@ -79,30 +108,48 @@ export class EditIncomeExpanses {
 
     }
 
-    async allCategoriesExpenses(resultData) {
+    renderExpense(resultExpense) {
+        const expenseBlock = document.querySelector('#box2');
+        resultExpense.forEach(item => {
+            const newBlock = `                             
+                                 <option value="${item.id}" id="${item.id}">${item.title}</option>                               
+                             `;
+            expenseBlock.innerHTML += newBlock;
+        })
+    }
+
+    async allCategoriesExpenses() {
         const resultExpense = await CustomHttp.request(config.host + '/categories/expense')
         console.log(resultExpense)
-        console.log(resultData)
-        const box1 = document.querySelector('#box1').value;
-        const box2 = document.querySelector('#box2').value;
-
-            if (box2 === resultData.category) {
-                console.log(resultExpense.id)
+        const box1 = document.querySelector('#box1');
+        box1.onchange = () => {
+            if (box1.value === 'expense') {
+                this.renderExpense(resultExpense)
             }
-            // if (box1.value === 'expense') {
-            //     this.renderExpense(resultExpense)
-            // }
+        }
 
     }
 
-    // renderExpense(resultExpense) {
-    //     const expenseBlock = document.querySelector('#box2');
-    //     resultExpense.forEach(item => {
-    //         const newBlock = `
-    //                              <input type="text" class="form-control" id="${item.id}" disabled>
-    //                          `;
-    //         expenseBlock.innerHTML += newBlock;
-    //     })
-    // }
+
+    async allCategoriesIncome() {
+        const resultIncome = await CustomHttp.request(config.host + '/categories/income')
+        console.log(resultIncome)
+        const box1 = document.querySelector('#box1');
+        box1.onchange = () => {
+            if (box1.value === 'income') {
+                this.renderIncome(resultIncome)
+            }
+        }
+    }
+
+    renderIncome(resultIncome) {
+        const incomeBlock = document.querySelector('#box2');
+        resultIncome.forEach(item => {
+            const newBlock = `                             
+                                 <option value="${item.id}" id="${item.id}">${item.title}</option>                               
+                             `    ;
+            incomeBlock.innerHTML += newBlock;
+        })
+    }
 
 }

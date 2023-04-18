@@ -7,10 +7,8 @@ export class MainIncomes {
     constructor() {
         this.profileElement  =  document.getElementById('profileIssue');
         this.profileFullNameElement  =  document.getElementById('profileFullName');
-        // this.categoryToggle();
         this.getBalance();
         this.incomeIssue();
-        // this.editIncomePage();
         this.deleteModal();
         this.toggleUser();
         this.dropDownToggle();

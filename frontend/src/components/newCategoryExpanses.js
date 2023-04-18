@@ -24,7 +24,7 @@ export class NewCategoryExpanses {
 
     cancelExpButton() {
         document.querySelector('.cancelExpBtn').onclick = () => {
-            location.href = '#/expensesPage'
+            location.href = '#/mainExpenses'
         }
     }
 
@@ -44,7 +44,7 @@ export class NewCategoryExpanses {
                         throw new Error(resultData.error)
                     }
                     console.log(resultData)
-                    location.href = '#/expensesPage'
+                    location.href = '#/mainExpenses'
                 }
             } catch (error) {
                 console.log(error)
