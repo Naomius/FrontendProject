@@ -199,19 +199,14 @@ export class IncomeAndExpanses {
                 btn.style.display = 'block'
                 let categoryBlockId = event.target.parentNode.parentNode.parentNode.parentNode.id;
                 console.log(categoryBlockId)
-                if (agreeBtn.onclick) {
+                agreeBtn.onclick = (() => {
                     event.target.parentNode.parentNode.parentNode.parentNode.remove()
+                    btn.style.display = "none"
                     this.deleteIssueCategory(categoryBlockId)
-                }
+                })
             })
         })
-
         cancelBtn.onclick = () => {
-            btn.style.display = "none";
-        }
-
-
-        agreeBtn.onclick = () => {
             btn.style.display = "none";
         }
     }

@@ -7,15 +7,8 @@ export class EditIncomeExpanses {
     constructor() {
         this.profileElement  =  document.getElementById('profileIssue');
         this.profileFullNameElement  =  document.getElementById('profileFullName');
-
         this.routeParams = UrlManager.getQueryParams();
-        // this.cancelBtn();
-        // this.saveBtn();
-        // this.editExpenseIncome();
-        // this.allCategoriesExpenses();
-
         this.toggleUser();
-
         this.type = document.getElementById('type');
         this.operationId = this.routeParams.id;
         this.operation = {};
