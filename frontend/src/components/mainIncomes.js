@@ -74,23 +74,17 @@ export class MainIncomes {
                 btn.style.display = 'block'
                 let categoryBlockId = event.target.parentNode.parentNode.id;
 
-                if (agreeBtn.onclick) {
+                agreeBtn.onclick = (() =>  {
                     event.target.parentNode.parentNode.remove()
+                    btn.style.display = "none"
                     this.deleteIssueCategory(categoryBlockId)
-                }
+                })
             })
         })
 
         cancelBtn.onclick = () => {
             btn.style.display = "none";
         }
-
-
-        agreeBtn.onclick = () => {
-            btn.style.display = "none";
-        }
-
-
     }
 
     async deleteIssueCategory(categoryBlockId) {

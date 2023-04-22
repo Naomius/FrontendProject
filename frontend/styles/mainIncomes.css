@@ -217,7 +217,7 @@ hr {
     display: none;
 }
 
-.issue .modal-delete::before {
+.mainIncomes .modal-delete::before {
     content: '';
     background: #000;
     position: fixed;
