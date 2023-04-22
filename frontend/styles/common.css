@@ -20,7 +20,7 @@
 
 .issue-sidebar {
     border-right: 1px solid #D9D9D9;
-    height: 100%;
+    height: 100vh;
     position: relative;
 }
 

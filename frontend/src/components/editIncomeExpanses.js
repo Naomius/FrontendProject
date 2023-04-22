@@ -7,14 +7,102 @@ export class EditIncomeExpanses {
     constructor() {
         this.profileElement  =  document.getElementById('profileIssue');
         this.profileFullNameElement  =  document.getElementById('profileFullName');
+
         this.routeParams = UrlManager.getQueryParams();
-        this.cancelBtn();
-        this.saveBtn();
-        this.editExpenseIncome();
-        this.allCategoriesExpenses();
-        this.allCategoriesIncome()
+        // this.cancelBtn();
+        // this.saveBtn();
+        // this.editExpenseIncome();
+        // this.allCategoriesExpenses();
+
         this.toggleUser();
+
+        this.type = document.getElementById('type');
+        this.operationId = this.routeParams.id;
+        this.operation = {};
+        this.categoryId = null;
+        this.category = [];
+        this.init();
     }
+
+    async init() {
+        this.operation = await CustomHttp.request(config.host + '/operations/' + this.routeParams.id);
+        await this.valueInput(this.operation)
+    }
+
+    async getCategory() {
+        if (this.type.value === 'expense') {
+            const categoryExp = await CustomHttp.request(config.host + '/categories/expense');
+            this.category = categoryExp;
+        } else if (this.type.value === 'income') {
+            const categoryInc = await CustomHttp.request(config.host + '/categories/income')
+            this.category = categoryInc;
+        }
+
+        const category = document.querySelector('.category');
+        category.innerHTML = '';
+        this.category.forEach(item => {
+            const newBlock = `<option value="${item.title}" id="${item.id}">${item.title}</option>`;
+            category.innerHTML += newBlock;
+        })
+    }
+
+   async valueInput(data) {
+        const category = document.querySelector('.category');
+        const amount = document.querySelector('#incomeExpenseSum');
+        const date = document.querySelector('#incomeExpenseDate');
+        const comment = document.querySelector('#incomeExpenseTextarea');
+        const saveBtn = document.querySelector('.saveBtn');
+        const cancelBtn = document.querySelector('.cancelBtn');
+        const operations = await CustomHttp.request(config.host + '/operations/?period=all');
+
+       for (let el of this.type) {
+           if (el.value === data.type) {
+               document.getElementById(`${el.id}`).setAttribute('selected', 'selected');
+           }
+       }
+
+        await this.getCategory();
+
+       for (let el of this.type) {
+           if (el.value === data.type) {
+               document.getElementById(`${el.id}`).setAttribute('selected', 'selected');
+           }
+       }
+
+       category.value = data.category;
+       amount.value = data.amount;
+       date.value = data.date;
+       comment.value = data.comment;
+
+       this.categoryId = category[category.selectedIndex].id;
+
+       if (!this.type.value) {
+           category.setAttribute('disabled', 'disabled')
+       }
+
+       category.onchange = (() => {
+           this.categoryId = category[category.selectedIndex].id;
+       })
+
+       this.type.onchange = (() => {
+           this.getCategory();
+       })
+
+       saveBtn.onclick = (() => {
+            CustomHttp.request(config.host + '/operations/' + this.operationId, 'PUT', {
+                           "type": this.type.value,
+                           "amount": +amount.value,
+                           "date": date.value,
+                           "comment": comment.value,
+                           "category_id": +this.categoryId
+                       })
+           location.href = '#/incomeAndExpanses'
+       })
+       cancelBtn.onclick = (() => {
+           location.href = '#/incomeAndExpanses';
+       })
+    }
+
 
     toggleUser() {
         const userInfo = Auth.getUserInfo();
@@ -40,116 +128,4 @@ export class EditIncomeExpanses {
             document.getElementById("home-collapse").classList.toggle("show")
         };
     }
-
-    cancelBtn() {
-        document.querySelector('.cancelBtn').onclick = () => {
-            location.href = '#/incomeAndExpanses'
-        }
-    }
-
-    saveBtn() {
-        const that = this;
-        document.querySelector('.saveBtn').onclick = () => {
-            that.putNewExpensesOrIncomes();
-        }
-    }
-
-
-    async editExpenseIncome() {
-        const resultData = await CustomHttp.request(config.host + '/operations/' + this.routeParams.id)
-        console.log(resultData)
-
-        const inputType = document.querySelector('#box1').value = `${resultData.type}`;
-        const inputCategory = document.querySelector('#box2').value = `${resultData.category}`;
-        console.log(inputCategory)
-        const inputSum = document.querySelector('#incomeExpenseSum').value = `${resultData.amount}`;
-        const inputDate = document.querySelector('#incomeExpenseDate').value = `${resultData.date}`;
-        const inputComments = document.querySelector('#incomeExpenseTextarea').value = `${resultData.comment}`
-
-        if (!inputType && !inputCategory && !inputSum && !inputDate) {
-            location.href = 'javascript:void(0)';
-        }
-
-        this.allCategoriesExpenses(resultData)
-        this.allCategoriesIncome(resultData)
-
-    }
-
-    async putNewExpensesOrIncomes() {
-        const inputType = document.querySelector('#box1').value;
-        const inputCategory = document.querySelector('#box2').value;
-        const inputSum = document.querySelector('#incomeExpenseSum').value;
-        const inputDate = document.querySelector('#incomeExpenseDate').value;
-        const inputComments = document.querySelector('#incomeExpenseTextarea').value;
-
-        if (!inputType && !inputSum && !inputDate) {
-                location.href = 'javascript:void(0)';
-            }
-
-        try {
-            const resultData = await CustomHttp.request(config.host + '/operations/' + this.routeParams.id, 'PUT', {
-                "type": inputType,
-                "amount": +inputSum,
-                "date": inputDate,
-                "comment": inputComments,
-                "category_id": this.routeParams.id
-            })
-            console.log(this.routeParams.id)
-            if (resultData) {
-                if (resultData.error) {
-                    throw new Error(resultData.error)
-                }
-                // console.log(resultData)
-                // location.href = '#/incomeAndExpanses'
-            }
-        } catch (error) {
-            console.log(error)
-        }
-
-    }
-
-    renderExpense(resultExpense) {
-        const expenseBlock = document.querySelector('#box2');
-        resultExpense.forEach(item => {
-            const newBlock = `                             
-                                 <option value="${item.id}" id="${item.id}">${item.title}</option>                               
-                             `;
-            expenseBlock.innerHTML += newBlock;
-        })
-    }
-
-    async allCategoriesExpenses() {
-        const resultExpense = await CustomHttp.request(config.host + '/categories/expense')
-        console.log(resultExpense)
-        const box1 = document.querySelector('#box1');
-        box1.onchange = () => {
-            if (box1.value === 'expense') {
-                this.renderExpense(resultExpense)
-            }
-        }
-
-    }
-
-
-    async allCategoriesIncome() {
-        const resultIncome = await CustomHttp.request(config.host + '/categories/income')
-        console.log(resultIncome)
-        const box1 = document.querySelector('#box1');
-        box1.onchange = () => {
-            if (box1.value === 'income') {
-                this.renderIncome(resultIncome)
-            }
-        }
-    }
-
-    renderIncome(resultIncome) {
-        const incomeBlock = document.querySelector('#box2');
-        resultIncome.forEach(item => {
-            const newBlock = `                             
-                                 <option value="${item.id}" id="${item.id}">${item.title}</option>                               
-                             `    ;
-            incomeBlock.innerHTML += newBlock;
-        })
-    }
-
 }
