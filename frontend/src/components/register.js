@@ -170,7 +170,7 @@ export class Register {
                     }
                 } catch (error) {
                     this.validElement()
-                    console.log(error);
+                   console.log(error);
                 }
 
         }
