@@ -305,7 +305,23 @@ hr {
     color: red;
     font-size: 18px;
     margin-bottom: 18px;
+    margin-left: 10px;
 }
+
+.notValidTextBack {
+    display: none;
+    color: red;
+    font-size: 22px;
+    text-align: center;
+}
+
+/*.validFromBack {*/
+/*    display: none;*/
+/*    !*color: red;*!*/
+/*    !*font-size: 18px;*!*/
+/*    !*margin-bottom: 18px;*!*/
+/*}*/
+
 .passwordValidText {
     display: none;
     color: red;
@@ -483,3 +499,7 @@ a {
 }
 
 /*  End incomeAndExpanses */
+
+.register input {
+    padding-bottom: 20px;
+}

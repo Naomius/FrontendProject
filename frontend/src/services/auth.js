@@ -6,6 +6,7 @@ export class Auth {
     static userInfoKey = 'userInfo';
 
     static async processUnauthorizedResponse() {
+        const errorBack = document.querySelector('.notValidTextBack');
         const refreshToken = localStorage.getItem(this.refreshTokenKey);
         if (refreshToken) {
             const response = await fetch(config.host + '/refresh', {
@@ -25,9 +26,14 @@ export class Auth {
                 }
             }
         }
+        if (location.hash === '#/index') {
+            document.querySelector('.notValidTextBack').style.display = 'block';
+            errorBack.style.display = 'block'
+        } else {
+            this.removeTokens();
+            location.href = '#/';
+        }
 
-        this.removeTokens();
-        location.href = '#/';
         return false;
     }
 

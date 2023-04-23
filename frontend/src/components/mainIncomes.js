@@ -62,8 +62,6 @@ export class MainIncomes {
         }
     }
 
-    //Хотел через event удаление сделать, мысли не приходят, как удаление произвести именно после подтверждения кнопки модального блока.
-
     deleteModal() {
         const btn = document.querySelector('.modal-delete');
         const buttons = document.querySelectorAll('.deleteBtn');

@@ -6,13 +6,13 @@ import {NewCategoryIncome} from "./components/newCategoryIncome.js";
 import {MainExpenses} from "./components/mainExpenses.js"
 import {CustomHttp} from "./services/custom-http.js";
 import config from "../config/config.js";
-import {NewCategoryExpanses} from "./components/newCategoryExpanses";
-import {EditCategoryExpanses} from "./components/editCategoryExpanses";
-import {IncomeAndExpanses} from "./components/incomeAndExpanses";
-import {CreatIncomeExpanses} from "./components/creatIncomeExpanses";
-import {CreatExpensesIncome} from "./components/creatExpensesIncome";
-import {EditIncomeExpanses} from "./components/editIncomeExpanses";
-import {MainPage} from "./components/mainPage";
+import {NewCategoryExpanses} from "./components/newCategoryExpanses.js";
+import {EditCategoryExpanses} from "./components/editCategoryExpanses.js";
+import {IncomeAndExpanses} from "./components/incomeAndExpanses.js";
+import {CreatIncomeExpanses} from "./components/creatIncomeExpanses.js";
+import {CreatExpensesIncome} from "./components/creatExpensesIncome.js";
+import {EditIncomeExpanses} from "./components/editIncomeExpanses.js";
+import {MainPage} from "./components/mainPage.js";
 
 export class Router {
     constructor() {
@@ -28,7 +28,6 @@ export class Router {
                 title: 'Логин',
                 template: 'templates/index.html',
                 styles: 'styles/login.css',
-                // scripts: 'src/components/index.js',
                 load: () => {
                     new Register('index')
                 }
@@ -173,6 +172,7 @@ export class Router {
             return;
         }
 
+
        this.contentElement.innerHTML =
             await fetch(newRoute.template).then(response => response.text());
        this.stylesElement.setAttribute('href', newRoute.styles);
@@ -181,14 +181,23 @@ export class Router {
         const userInfo = Auth.getUserInfo();
         const accessToken = localStorage.getItem(Auth.accessTokenKey);
         if (userInfo && accessToken) {
-            // this.profileElement.style.display = 'block';
-            // this.profileFullNameElement.innerText = userInfo.fullName;
-            // this.dropDownToggle();
-            // this.categoryToggle();
             this.getBalance();
         } else {
             // this.profileElement.style.display = 'none';
         }
+
+       if (urlRoute !== '#/') {
+           if (urlRoute !== '#/register') {
+               if (urlRoute === '#/register') {
+                   return
+               }
+               if (!accessToken) {
+                   window.location.href = '#/';
+                   return;
+               }
+           }
+       }
+
 
         newRoute.load()
     }

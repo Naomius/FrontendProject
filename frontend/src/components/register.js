@@ -9,6 +9,7 @@ export class Register {
         this.processElement = null;
         this.page = page;
         this.activePlaceholder()
+        this.pass = document.getElementById('password');
 
         const accessToken = localStorage.getItem(Auth.accessTokenKey);
         if (accessToken) {
@@ -55,7 +56,7 @@ export class Register {
         const that = this;
         this.fields.forEach(item => {
             item.element = document.getElementById(item.id);
-            item.element.onchange = function () {
+            item.element.oninput = function () {
                 that.validateField.call(that, item, this)
             }
         });
@@ -73,6 +74,8 @@ export class Register {
             element.style.borderColor = 'red';
             field.valid = false;
             this.textValidation(field);
+        } else if (element.id === 'passwordRepeat' && element.value !== this.pass.value) {
+            field.valid = false
         } else {
             element.removeAttribute('style');
             field.valid = true;
@@ -113,10 +116,15 @@ export class Register {
             return validForm;
     }
 
+    validElement() {
+        document.querySelector('.notValidTextBack').style.display = 'block'
+    }
+
    async processForm() {
         if(this.validateForm()) {
             const email = this.fields.find(item => item.name === 'email').element.value;
             const password = this.fields.find(item => item.name === 'password').element.value;
+
 
             if (this.page === 'register') {
                 try {
@@ -135,11 +143,14 @@ export class Register {
                   return console.log(error);
                 }
             }
+
+
                 try {
                     const result = await CustomHttp.request(config.host + '/login', "POST", {
                         email: email,
                         password: password,
                     })
+
                     if (result) {
                         if (!result.user || !result.tokens.accessToken || !result.tokens.refreshToken || !result.user.fullName || !result.user.id) {
                             throw new Error(result.message)
@@ -150,11 +161,18 @@ export class Register {
                             fullName: result.user.fullName,
                             userId: result.user.id
                         })
-                        location.href = '#/mainIncomes'
+
+                        if (!result.error) {
+                            location.href = '#/mainIncomes'
+                            location.reload();
+                        }
+
                     }
                 } catch (error) {
+                    this.validElement()
                     console.log(error);
                 }
+
         }
     }
 
