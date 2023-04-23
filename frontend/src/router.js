@@ -123,16 +123,6 @@ export class Router {
                 }
             },
             {
-                route: '#/creatExpensesIncome',
-                title: 'Создание Расходов и Доходов',
-                template: 'templates/creatExpensesIncome.html',
-                styles: 'styles/creatExpensesIncome.css',
-                scripts: 'src/components/creatExpensesIncome.js',
-                load: () => {
-                    new CreatExpensesIncome();
-                }
-            },
-            {
                 route: '#/editIncomeExpanses',
                 title: 'Редактирование Расходов и Доходов',
                 template: 'templates/editIncomeExpanses.html',
@@ -201,20 +191,6 @@ export class Router {
 
         newRoute.load()
     }
-
-    dropDownToggle() {
-        document.getElementById('profileIssue').onclick = () => {
-            document.getElementById("myDropdown").classList.toggle("show")
-        };
-    }
-
-    categoryToggle() {
-        document.getElementById('navItemToggle').onclick = () => {
-            document.getElementById("home-collapse").classList.toggle("show")
-        };
-    }
-
-
 
     async getBalance() {
         const res = await CustomHttp.request(config.host + '/balance');

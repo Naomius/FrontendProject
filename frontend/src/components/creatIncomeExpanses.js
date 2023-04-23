@@ -1,17 +1,100 @@
 import {Auth} from "../services/auth.js";
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
+import {Operations} from "../services/operations.js";
+
+
 
 export class CreatIncomeExpanses {
     constructor() {
         this.profileElement  =  document.getElementById('profileIssue');
         this.profileFullNameElement  =  document.getElementById('profileFullName');
-        this.cancelBtn();
-        this.saveBtn();
-        this.allCategoriesIncome();
+        this.type = document.getElementById(`type`);
+        this.operationId = localStorage.getItem('operationId');
+        this.categoryId = null;
+        this.category = [];
+        this.init();
         this.toggleUser();
-        // this.allCategoriesExpenses();
+    }
 
+
+
+    // dropDownToggle() {
+    //     document.getElementById('profileIssue').onclick = () => {
+    //         document.getElementById("myDropdown").classList.toggle("show")
+    //     };
+    // }
+    //
+    // categoryToggle() {
+    //     document.getElementById('navItemToggle').onclick = () => {
+    //         document.getElementById("home-collapse").classList.toggle("show")
+    //     };
+    // }
+
+
+    async init() {
+        await this.creatValueInput();
+    }
+
+    async getCategory() {
+        if (this.type.value === 'expense') {
+            const categoryExp = await CustomHttp.request(config.host + '/categories/expense');
+            this.category = categoryExp;
+        } else if (this.type.value === 'income') {
+            const categoryInc = await CustomHttp.request(config.host + '/categories/income')
+            this.category = categoryInc;
+        }
+        const category = document.getElementById('category');
+        category.innerHTML = `<option value="" disabled selected hidden>Категория...</option>`;
+
+        this.category.forEach(item => {
+            const newOption = `<option value="${item.title}" id="${item.id}">${item.title}</option>`
+            category.innerHTML += newOption
+        })
+
+    }
+
+    async creatValueInput() {
+        const category = document.getElementById('category');
+        const amount = document.getElementById('incomeExpenseSum');
+        const date = document.querySelector('#incomeExpenseDate');
+        const comment = document.querySelector('#incomeExpenseTextarea');
+        const operations = await CustomHttp.request(config.host + '/operations/?period=all');
+        const creatButton = document.querySelector('.saveBtn');
+        const cancelButton = document.querySelector('.cancelBtn');
+
+        this.type.onchange = (async () => {
+            category.removeAttribute('disables');
+            await this.getCategory();
+        })
+
+        category.onchange = (() => {
+            this.categoryId = category[category.selectedIndex].id;
+        })
+
+        creatButton.onclick = (() => {
+                try {
+                    const result = CustomHttp.request(config.host + '/operations', 'POST', {
+                        "type": this.type.value,
+                        "amount": amount.value,
+                        "date": date.value,
+                        "comment": comment.value,
+                        "category_id": +this.categoryId
+                    });
+                    if (result) {
+                        if (result.error) {
+                            throw new Error(result.error)
+                        }
+                        location.href = '#/incomeAndExpanses'
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+
+        });
+        cancelButton.onclick = (() => {
+            location.href = '#/incomeAndExpanses'
+        })
     }
 
     toggleUser() {
@@ -20,90 +103,14 @@ export class CreatIncomeExpanses {
         if (userInfo && accessToken) {
             this.profileElement.style.display = 'block';
             this.profileFullNameElement.innerText = userInfo.fullName;
+            document.getElementById('profileIssue').onclick = () => {
+                document.getElementById("myDropdown").classList.toggle("show")
+            }
+            document.getElementById('navItemToggle').onclick = () => {
+                document.getElementById("home-collapse").classList.toggle("show")
+            };
         } else {
             this.profileElement.style.display = 'none';
-        }
-    }
-
-    cancelBtn() {
-        document.querySelector('.cancelBtn').onclick = () => {
-            location.href = '#/incomeAndExpanses'
-        }
-    }
-
-    saveBtn() {
-        const that = this;
-        document.querySelector('.saveBtn').addEventListener('click', function () {
-            that.creatNewIncomeExpanse();
-        })
-    }
-
-    async creatNewIncomeExpanse() {
-        // const selectType = document.querySelector('#box1');
-        // let selectIndex = selectType.selectedIndex;
-        // let selectOption = selectType.options
-        // const selectData = selectOption[selectIndex].textContent;
-        const optionId = document.querySelector('option')
-        const boxIncome = document.querySelector('#box1').value;
-        const selectCategoryId = document.querySelector('#box2').value;
-        const inputSum = document.querySelector('#incomeExpenseSum').value;
-        const inputDateValue = document.querySelector('#incomeExpenseDate').value;
-        const textAreaData = document.querySelector('#incomeExpenseTextarea').value
-        console.log(selectCategoryId)
-        try {
-            const result = await CustomHttp.request(config.host + '/operations', 'POST', {
-                "type": boxIncome,
-                "amount": inputSum,
-                "date": inputDateValue,
-                "comment": textAreaData,
-                "category_id": +selectCategoryId
-            });
-            if (result) {
-                if (result.error) {
-                    throw new Error(result.error)
-                }
-                console.log(result)
-                location.href = '#/incomeAndExpanses'
-            }
-        } catch (error) {
-            console.log(error)
-        }
-
-
-    }
-
-    // syncSelects() {
-    //     const box1 = document.querySelector('#box1');
-    //     box1.onchange = () => {
-    //         const box2 = document.querySelector('#box2');
-    //         if (box2.value === 'income') {
-    //             this.renderIncome()
-    //         }
-    //        // box2.value = box1.value
-    //     }
-    // }
-
-
-    //Рендерим Селект
-
-    renderIncome(resultIncome) {
-       const incomeBlock = document.querySelector('#box2');
-        resultIncome.forEach(item => {
-            const newBlock = `                             
-                                 <option value="${item.id}" id="${item.id}">${item.title}</option>                               
-                             `    ;
-            incomeBlock.innerHTML += newBlock;
-        })
-    }
-
-    async allCategoriesIncome() {
-        const resultIncome = await CustomHttp.request(config.host + '/categories/income')
-        console.log(resultIncome)
-        const box1 = document.querySelector('#box1');
-        box1.onchange = () => {
-            if (box1.value === 'income') {
-                this.renderIncome(resultIncome)
-            }
         }
     }
 }

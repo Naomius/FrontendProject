@@ -1,20 +1,24 @@
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
 import {Auth} from "../services/auth.js";
+import {Operations} from "../services/operations.js";
 
 export class IncomeAndExpanses {
     constructor() {
         this.profileElement = document.getElementById('profileIssue');
         this.profileFullNameElement = document.getElementById('profileFullName');
         this.tBodyBlock = document.querySelector('.tbodyBlock');
-        this.createIncomeBtn();
-        this.createExpenseBtn();
-        this.incomeExpenseGet();
+        this.creatIncomesExpenses();
+        // this.incomeExpenseGet();
         this.deleteModal();
         this.toggleUser();
         this.dropDownToggle();
         this.categoryToggle();
-        this.activeBtns()
+        // this.todayFilter()
+        this.activeBtns();
+        this.editIncomePage()
+        this.filterOperations = [];
+        this.init('today');
     }
 
 
@@ -41,19 +45,22 @@ export class IncomeAndExpanses {
         };
     }
 
-    createIncomeBtn() {
-        document.querySelector('.createIncomeBtn').onclick = () => {
-            location.href = '#/creatIncomeExpanses'
-        }
-    }
+    creatIncomesExpenses() {
+      const creatIncomeBtn = document.querySelector('.createIncomeBtn');
+      const creatExpenseBtn = document.querySelector('.createExpenseBtn');
 
-    createExpenseBtn() {
-        document.querySelector('.createExpenseBtn').onclick = () => {
-            location.href = '#/creatExpensesIncome'
-        }
+        creatIncomeBtn.onclick = (() => { location.href = '#/creatIncomeExpanses'})
+        creatExpenseBtn.onclick = (() => { location.href = '#/creatIncomeExpanses'})
     }
 
 //----------Filters ---------
+
+    async init(value, dateFrom, dateTo) {
+        this.filterOperations = await Operations.getOperations(value, dateFrom, dateTo);
+        this.tBodyBlock.innerHTML = '';
+        this.renderIncomeExpense(this.filterOperations);
+        this.editIncomePage();
+    }
 
     activeBtns() {
         const today = document.getElementById('today');
@@ -70,90 +77,68 @@ export class IncomeAndExpanses {
             [].forEach.call(itemTabs, function (el) {
                 el.classList.remove('active')
             });
+            if (!interval.classList.contains('active')) {
+                dateFrom.setAttribute('disabled', 'disabled');
+                dateTo.setAttribute('disabled', 'disabled');
+            }
         }
 
 
-        today.onclick = () => {
+        today.onclick = (async () => {
             check();
             today.classList.add('active');
-            this.todayFilter()
-        }
+            await this.init('today');
+        })
 
-        week.onclick = () => {
+        week.onclick =(async () => {
             check();
             week.classList.add('active')
-            this.weekFilter()
-        }
-        month.onclick = () => {
+            await this.init('week');
+        })
+        month.onclick = (async () => {
             check();
             month.classList.add('active')
-            this.monthFilter()
-        }
+            await this.init('month');
+        })
 
-        year.onclick = () => {
+        year.onclick = (async () => {
             check();
             year.classList.add('active')
-            this.yearFilter()
-        }
+            await this.init('year');
+        })
 
-        all.onclick = () => {
+        all.onclick = (async () => {
             check();
             all.classList.add('active')
-        }
+            await this.init('all');
+        })
 
         interval.onclick = (async () => {
             check();
             interval.classList.add('active')
-            this.intervalFilter()
+            await this.init('interval');
 
             if (interval.classList.contains('active')) {
                 dateFrom.removeAttribute('disabled');
                 dateTo.removeAttribute('disabled');
             }
+
+            dateFrom.onchange = (() => {
+                if (dateFrom.value && dateTo.value) {
+                    this.init('interval', dateFrom.value, dateTo.value);
+                }
+            })
+            dateTo.onchange = (() => {
+                if (dateFrom.value && dateTo.value) {
+                    this.init('interval', dateFrom.value, dateTo.value);
+                }
+            })
+
         });
 
 
     }
 
-    async incomeExpenseGet() {
-        const result = await CustomHttp.request(config.host + '/operations?period=all');
-        this.tBodyBlock.innerHTML = '';
-        console.log(result)
-        this.renderIncomeExpense(result)
-        this.editIncomePage();
-    }
-
-    async todayFilter() {
-        const todayResult = await CustomHttp.request(config.host + '/operations')
-        this.tBodyBlock.innerHTML = '';
-        this.renderIncomeExpense(todayResult)
-    }
-
-    async weekFilter() {
-        const result = await CustomHttp.request(config.host + '/operations?period=week')
-        this.tBodyBlock.innerHTML = '';
-        this.renderIncomeExpense(result)
-    }
-
-    async monthFilter() {
-        const result = await CustomHttp.request(config.host + '/operations?period=month')
-        this.tBodyBlock.innerHTML = '';
-        this.renderIncomeExpense(result)
-    }
-
-    async yearFilter() {
-        const result = await CustomHttp.request(config.host + '/operations?period=year')
-        this.tBodyBlock.innerHTML = '';
-        this.renderIncomeExpense(result)
-    }
-
-    async intervalFilter() {
-        const dateFrom = document.getElementById('dateFrom').value;
-        const dateTo = document.getElementById('dateTo').value;
-        const result = await CustomHttp.request(config.host + '/operations?period=interval' + `&dateFrom=${dateFrom}&dateTo=${dateTo}`)
-        this.tBodyBlock.innerHTML = '';
-        this.renderIncomeExpense(result)
-    }
 
 //--------------End of Filters--------------
 
@@ -161,9 +146,14 @@ export class IncomeAndExpanses {
         const trElement = document.querySelector('.tbodyBlock');
         const categoryColor = document.querySelector('.span-row1');
         result.forEach((item, index) => {
+
+            if (item.type === 'income') {
+                item.type = 'доход';
+            } else {item.type = 'расход'}
+
             const newBlock = `<tr class="trData" id="${item.id}">
                                   <th scope="row">${index + 1}</th>
-                                  ${item.type === 'expense' ? `<td><span class="span-row1 redExpense">${item.type}</span></td>` : `<td><span class="span-row1">${item.type}</span></td>`}
+                                  ${item.type === 'расход' ? `<td><span class="span-row1 redExpense">${item.type}</span></td>` : `<td><span class="span-row1">${item.type}</span></td>`}
                                   <td>${item.category}</td>
                                   <td>$${item.amount}</td>
                                   <td>${item.date}</td>

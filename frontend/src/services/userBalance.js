@@ -1,8 +1,0 @@
-
-export class UserBalance {
-    constructor() {
-
-    }
-
-
-}

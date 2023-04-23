@@ -1,4 +1,5 @@
 import config from "../../config/config.js";
+import {Auth} from "./auth.js";
 
 
 export class Operations {
@@ -21,7 +22,7 @@ export class Operations {
                         return result;
                     }
                 }
-            }else if (period) {
+            } else if (period) {
                 const response = await fetch(config.host + '/operations' + '?period=' + period, {
                     method: 'GET',
                     headers: {
@@ -36,7 +37,7 @@ export class Operations {
                 }
             }
 
-
         }
     }
+
 }
