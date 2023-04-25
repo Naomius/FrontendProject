@@ -143,7 +143,9 @@ export class Register {
                         if (!result.user) {
                             throw new Error(result.message)
                         }
+                        location.href = '#/'
                     }
+                    location.href = '#/'
                 } catch (error) {
                   return console.log(error);
                 }

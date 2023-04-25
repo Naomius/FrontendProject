@@ -42,7 +42,7 @@ export class NewCategoryIncome {
         const emptyInput = document.querySelector('.emptyInput-error');
         const sameCategory = document.querySelector('.sameInput-error');
 
-        if (!newTitle) {
+        if (!newTitle.trim()) {
             sameCategory.style.display = ''
             emptyInput.style.display = 'block'
             location.href = 'javascript:void(0)'
