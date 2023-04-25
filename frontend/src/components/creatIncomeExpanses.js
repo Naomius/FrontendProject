@@ -2,6 +2,8 @@ import {Auth} from "../services/auth.js";
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
 import {Operations} from "../services/operations.js";
+import {UrlManager} from "../utils/url-manager.js";
+import {log10} from "chart.js/helpers";
 
 
 
@@ -9,28 +11,26 @@ export class CreatIncomeExpanses {
     constructor() {
         this.profileElement  =  document.getElementById('profileIssue');
         this.profileFullNameElement  =  document.getElementById('profileFullName');
+        this.routeParams = UrlManager.getQueryParams();
         this.type = document.getElementById(`type`);
         this.operationId = localStorage.getItem('operationId');
         this.categoryId = null;
         this.category = [];
         this.init();
         this.toggleUser();
+        this.routeParamsInput()
     }
 
 
-
-    // dropDownToggle() {
-    //     document.getElementById('profileIssue').onclick = () => {
-    //         document.getElementById("myDropdown").classList.toggle("show")
-    //     };
-    // }
-    //
-    // categoryToggle() {
-    //     document.getElementById('navItemToggle').onclick = () => {
-    //         document.getElementById("home-collapse").classList.toggle("show")
-    //     };
-    // }
-
+    routeParamsInput() {
+        if (this.routeParams.type === 'income') {
+            this.type.value = 'income'
+            this.getCategory()
+        } else if (this.routeParams.type === 'expense') {
+            this.type.value = 'expense'
+            this.getCategory()
+        }
+    }
 
     async init() {
         await this.creatValueInput();
@@ -44,6 +44,7 @@ export class CreatIncomeExpanses {
             const categoryInc = await CustomHttp.request(config.host + '/categories/income')
             this.category = categoryInc;
         }
+
         const category = document.getElementById('category');
         category.innerHTML = `<option value="" disabled selected hidden>Категория...</option>`;
 
@@ -62,6 +63,8 @@ export class CreatIncomeExpanses {
         const operations = await CustomHttp.request(config.host + '/operations/?period=all');
         const creatButton = document.querySelector('.saveBtn');
         const cancelButton = document.querySelector('.cancelBtn');
+        const inputErrorCreat = document.getElementById('input-server-error')
+
 
         this.type.onchange = (async () => {
             category.removeAttribute('disables');
@@ -73,29 +76,48 @@ export class CreatIncomeExpanses {
         })
 
         creatButton.onclick = (() => {
-                try {
-                    const result = CustomHttp.request(config.host + '/operations', 'POST', {
-                        "type": this.type.value,
-                        "amount": amount.value,
-                        "date": date.value,
-                        "comment": comment.value,
-                        "category_id": +this.categoryId
-                    });
-                    if (result) {
-                        if (result.error) {
-                            throw new Error(result.error)
-                        }
-                        location.href = '#/incomeAndExpanses'
-                    }
-                } catch (error) {
-                    console.log(error)
+
+            if (!date.value || !amount.value || !category.value || ! +this.categoryId || !comment.value) {
+                inputErrorCreat.style.display = 'block'
+            } else {
+                const result =  CustomHttp.request(config.host + '/operations', 'POST', {
+                            "type": this.type.value,
+                            "amount": amount.value,
+                            "date": date.value,
+                            "comment": comment.value,
+                            "category_id": +this.categoryId
+                        });
+                if (result) {
+                    inputErrorCreat.style.display = 'none';
+                    location.href = '#/incomeAndExpanses'
                 }
+            }
+                // try {
+                //     const result =  CustomHttp.request(config.host + '/operations', 'POST', {
+                //         "type": this.type.value,
+                //         "amount": amount.value,
+                //         "date": date.value,
+                //         "comment": comment.value,
+                //         "category_id": +this.categoryId
+                //     });
+                //     if (result) {
+                //         if (result.error) {
+                //             throw new Error(result.error)
+                //         }
+                //         inputErrorCreat.style.display = 'block'
+                //         // location.href = '#/incomeAndExpanses'
+                //     }
+                // }
+                // catch (error) {
+                //     console.log(error)
+                // }
 
         });
         cancelButton.onclick = (() => {
             location.href = '#/incomeAndExpanses'
         })
     }
+
 
     toggleUser() {
         const userInfo = Auth.getUserInfo();
@@ -111,6 +133,7 @@ export class CreatIncomeExpanses {
             };
         } else {
             this.profileElement.style.display = 'none';
+
         }
     }
 }

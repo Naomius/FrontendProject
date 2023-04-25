@@ -33,14 +33,22 @@ export class NewCategoryIncome {
 
     cancelButton() {
         document.querySelector('.cancelBtn').onclick = () => {
-            location.href = '#/issue'
+            location.href = '#/mainIncomes'
         }
     }
 
     async creatNewCategory() {
         const newTitle = document.querySelector('.newCategoryInputData').value;
+        const emptyInput = document.querySelector('.emptyInput-error');
+        const sameCategory = document.querySelector('.sameInput-error');
+
         if (!newTitle) {
+            sameCategory.style.display = ''
+            emptyInput.style.display = 'block'
             location.href = 'javascript:void(0)'
+        } else if (newTitle) {
+            emptyInput.style.display = ''
+            sameCategory.style.display = 'block'
         }
 
         try {
@@ -52,7 +60,7 @@ export class NewCategoryIncome {
                     throw new Error(res.error)
                 }
                 console.log(res)
-                location.href = '#/issue'
+                location.href = '#/mainIncomes'
             }
         } catch (error) {
             console.log(error)

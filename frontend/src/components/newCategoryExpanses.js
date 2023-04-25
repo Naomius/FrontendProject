@@ -14,7 +14,6 @@ export class NewCategoryExpanses {
     }
 
 
-
     btnNewExpanse() {
         const that = this;
         document.querySelector('.newExpansesBtn').addEventListener('click', function () {
@@ -30,9 +29,17 @@ export class NewCategoryExpanses {
 
    async creatNewCategory() {
         const newTitle = document.querySelector('.newCategoryInputData').value;
+        const emptyInput = document.querySelector('.emptyInput-error');
+        const sameCategory = document.querySelector('.sameInput-error');
+
 
             if (!newTitle) {
+                sameCategory.style.display = ''
+                emptyInput.style.display = 'block'
                 location.href = 'javascript:void(0)'
+            } else if (newTitle) {
+                emptyInput.style.display = ''
+                sameCategory.style.display = 'block'
             }
 
             try {
@@ -43,7 +50,7 @@ export class NewCategoryExpanses {
                     if (resultData.error) {
                         throw new Error(resultData.error)
                     }
-                    console.log(resultData)
+
                     location.href = '#/mainExpenses'
                 }
             } catch (error) {

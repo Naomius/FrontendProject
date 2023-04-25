@@ -62,22 +62,23 @@
     <div class="container">
       <h1 class="fw-bold mb-5">Создание дохода/расхода</h1>
       <form>
+          <div class="input-error" id="input-server-error">Заполните все поля</div>
         <div class="input-group mb-3">
-          <select class="form-select box1" id="type" required>
+          <select class="form-select box1 validError" id="type" required>
             <option disabled selected hidden>Тип...</option>
             <option value="income">Доход</option>
             <option value="expense">Расход</option>
           </select>
         </div>
         <div class="input-group mb-3 selectIncome">
-          <select class="form-select" id="category" required>
+          <select class="form-select validError" id="category" required>
             <option disabled selected hidden>Категория...</option>
           </select>
         </div>
-      <input class="form-control mb-3" id="incomeExpenseSum" type="number" placeholder="Сумма в $..." aria-label="default input example">
-      <input class="form-control mb-3" id="incomeExpenseDate" type="date" placeholder="Дата..." aria-label="default input example">
+      <input class="form-control mb-3 validError" id="incomeExpenseSum" type="number" placeholder="Сумма в $..." aria-label="default input example" required>
+      <input class="form-control mb-3 validError" id="incomeExpenseDate" type="date" placeholder="Дата..." aria-label="default input example" required>
         <div class="input-group mb-3">
-          <textarea class="form-control" id="incomeExpenseTextarea" aria-label="With textarea"></textarea>
+          <textarea class="form-control validError" id="incomeExpenseTextarea" maxlength="60" aria-label="With textarea"></textarea>
         </div>
       <button type="button" class="btn btn-success me-2 saveBtn">Сохранить</button>
       <button type="button" class="btn btn-danger cancelBtn">Отмена</button>

@@ -62,7 +62,7 @@ export class EditCategoryExpanses {
             if (resultData.error) {
                 throw new Error(resultData.error)
             }
-            location.href = '#/expensesPage'
+            location.href = '#/mainExpenses'
         } catch (error) {
 
         }

@@ -175,16 +175,12 @@ export class Router {
             // this.profileElement.style.display = 'none';
         }
 
-       if (urlRoute !== '#/') {
-           if (urlRoute !== '#/register') {
-               if (urlRoute === '#/register') {
-                   return
-               }
+
+       if (urlRoute !== '#/' && urlRoute !== '#/register') {
                if (!accessToken) {
                    window.location.href = '#/';
                    return;
                }
-           }
        }
 
 

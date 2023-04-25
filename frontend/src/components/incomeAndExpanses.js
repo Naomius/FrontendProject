@@ -2,6 +2,7 @@ import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
 import {Auth} from "../services/auth.js";
 import {Operations} from "../services/operations.js";
+import {UrlManager} from "../utils/url-manager";
 
 export class IncomeAndExpanses {
     constructor() {
@@ -49,8 +50,8 @@ export class IncomeAndExpanses {
       const creatIncomeBtn = document.querySelector('.createIncomeBtn');
       const creatExpenseBtn = document.querySelector('.createExpenseBtn');
 
-        creatIncomeBtn.onclick = (() => { location.href = '#/creatIncomeExpanses'})
-        creatExpenseBtn.onclick = (() => { location.href = '#/creatIncomeExpanses'})
+        creatIncomeBtn.onclick = (() => { location.href = '#/creatIncomeExpanses?type=income'})
+        creatExpenseBtn.onclick = (() => { location.href = '#/creatIncomeExpanses?type=expense'})
     }
 
 //----------Filters ---------

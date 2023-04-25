@@ -342,17 +342,48 @@ hr {
     font-size: 18px;
     margin-bottom: 18px;
 }
+
+.passwordValidTextRegister {
+    display: none;
+    color: red;
+    font-size: 18px;
+    margin-bottom: 18px;
+}
+
 .fullnameValidText {
     display: none;
     color: red;
     font-size: 18px;
     margin-bottom: 18px;
 }
+
+.input-error {
+    display: none;
+    color: red;
+    font-size: 18px;
+    margin-bottom: 18px;
+    text-align: center;
+}
 .repeatPasswordValidText {
     display: none;
     color: red;
     font-size: 18px;
     margin-bottom: 18px;
+}
+
+.emptyInput-error {
+    display: none;
+    color: red;
+    font-size: 18px;
+    margin-bottom: 18px;
+    text-align: center;
+}
+.sameInput-error {
+    display: none;
+    color: red;
+    font-size: 18px;
+    margin-bottom: 18px;
+    text-align: center;
 }
 
 .item-tabs-date {

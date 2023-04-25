@@ -30,7 +30,7 @@ export class Register {
                 name: 'password',
                 id: 'password',
                 element: null,
-                regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
+                regex: this.page === 'register' ? /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/ : '',
                 valid: false,
             },
 
@@ -44,6 +44,7 @@ export class Register {
                 regex: /^[А-Я]+\s[а-я]+$/i,
                 valid: false,
             },
+
                 {
                     name: 'passwordRepeat',
                     id: 'passwordRepeat',
@@ -69,18 +70,22 @@ export class Register {
     }
 
     validateField(field, element) {
-
+        const errorRepeatPass = document.querySelector('.repeatPasswordValidText');
+        const emptyRepeatPassInput = document.querySelector('.passwordValidTextRegister')
+        // passwordRepeat === '' ? emptyRepeatPassInput.style.display = 'block' : emptyRepeatPassInput.style.display = 'none'
         if (!element.value || !element.value.match(field.regex)) {
             element.style.borderColor = 'red';
             field.valid = false;
             this.textValidation(field);
-        } else if (element.id === 'passwordRepeat' && element.value !== this.pass.value) {
+        } else if (element.id === 'passwordRepeat' && element.value !== this.pass.value && 'password' !== 'passwordRepeat') {
+            errorRepeatPass.style.display = 'block';
+            this.processElement.setAttribute('disabled', '')
             field.valid = false
         } else {
+            // errorRepeatPass.style.display = 'none';
             element.removeAttribute('style');
             field.valid = true;
             this.textValidationRemove(field);
-
         }
         this.validateForm()
     }
