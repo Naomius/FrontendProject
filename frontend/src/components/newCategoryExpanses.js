@@ -36,6 +36,7 @@ export class NewCategoryExpanses {
             if (!newTitle) {
                 sameCategory.style.display = ''
                 emptyInput.style.display = 'block'
+                emptyInput.nextElementSibling.nextElementSibling.style.border = '1px solid red'
                 location.href = 'javascript:void(0)'
             } else if (newTitle) {
                 emptyInput.style.display = ''

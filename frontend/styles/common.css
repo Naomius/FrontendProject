@@ -549,3 +549,32 @@ a {
     padding: 0 12px;
 }
 
+/*--------------Search-bar--------------*/
+
+.searchtext {
+    font-size: 16px;
+    font-weight: bold;
+    height: 27px;
+    padding: 0 6px 0;
+    width: 250px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.highlight {
+    background: #4cff00;
+}
+
+#search-highlight {
+    margin: 10px;
+}
+
+.search-button {
+    background-color: #0b2f3f;
+    font-weight: bold;
+    font-size: 12px;
+    height: 28px;
+    margin: 0;
+    color: #ffffff;
+    padding: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}

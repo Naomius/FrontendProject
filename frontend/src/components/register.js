@@ -63,7 +63,8 @@ export class Register {
         });
 
         this.processElement = document.getElementById('process');
-        this.processElement.onclick = function () {
+        this.processElement.onclick = function (event) {
+            event.preventDefault();
             that.processForm();
         }
 
@@ -171,7 +172,6 @@ export class Register {
 
                         if (!result.error) {
                             location.href = '#/mainIncomes'
-                            location.reload();
                         }
 
                     }
@@ -182,6 +182,7 @@ export class Register {
 
         }
     }
+
 
     activePlaceholder() {
         const inputEmail = document.querySelector('#email');
@@ -257,5 +258,6 @@ export class Register {
             document.querySelector('label[for=passwordRepeat]').style.display = 'block'
         }
     }
+
 
 }

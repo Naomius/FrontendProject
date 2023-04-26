@@ -39,15 +39,18 @@ export class NewCategoryIncome {
 
     async creatNewCategory() {
         const newTitle = document.querySelector('.newCategoryInputData').value;
+        const inputBlock = document.querySelector('.newCategoryInputData')
         const emptyInput = document.querySelector('.emptyInput-error');
         const sameCategory = document.querySelector('.sameInput-error');
 
         if (!newTitle.trim()) {
             sameCategory.style.display = ''
             emptyInput.style.display = 'block'
+            inputBlock.style.border = '1px solid red'
             location.href = 'javascript:void(0)'
         } else if (newTitle) {
             emptyInput.style.display = ''
+            inputBlock.style.border = ''
             sameCategory.style.display = 'block'
         }
 
@@ -60,6 +63,7 @@ export class NewCategoryIncome {
                     throw new Error(res.error)
                 }
                 console.log(res)
+
                 location.href = '#/mainIncomes'
             }
         } catch (error) {
@@ -67,6 +71,7 @@ export class NewCategoryIncome {
         }
 
     }
+
 
 
     dropDownToggle() {
